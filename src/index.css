@@ -1,0 +1,418 @@
+@font-face {
+  font-family: 'GT Pressura Pro';
+  src: url('https://www.scape.com.au/wp-content/themes/scape-student/assets/fonts/GTPressuraPro-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Bariol';
+  src: url('https://www.scape.com.au/wp-content/themes/scape-student/assets/fonts/Bariol-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Raw brand hues — use only through the semantic tokens below except for
+     large fills (chart bars, borders, icons) where the 3:1 mark-contrast
+     bar applies rather than the 4.5:1 text bar. */
+  --scape-bubblegum: #FA70AB;
+  --scape-salt: #FFDDEE;
+  --scape-neon: #FF007F;
+  --scape-big-apple: #FF222D;
+  --scape-dawn: #F58C34;
+  --scape-fern: #79BE76;
+  --scape-shamrock: #055755;
+  --scape-reef: #00B7BD;
+  --scape-mist: #B2DDE7;
+  --scape-harbour: #397CC0;
+  --scape-ocean: #242A56;
+  --scape-dusk: #814496;
+
+  /* Semantic tokens — validated for contrast (see design notes in PR). */
+  --ink: #242A56;
+  --ink-secondary: #545a80;
+  --ink-muted: #8488a3;
+  --surface: #ffffff;
+  --surface-alt: #f9fafc;
+  --border: #e3e8ef;
+  --border-strong: #cdd6e3;
+
+  --accent: #FF007F;
+  --accent-hover: #FA70AB;
+  --accent-soft: #FFDDEE;
+  --link: #2F6DAD;
+
+  /* Status — fixed meaning, never reused as a generic series color. */
+  --status-good: #055755;
+  --status-good-fill: #0F8A6B;
+  --status-critical: #D01620;
+  --status-critical-fill: #FF222D;
+  --status-warning: #B85A12;
+  --status-warning-fill: #F58C34;
+  --status-neutral-fill: #C9CDD8;
+
+  /* Ordinal ramp (early -> late pipeline stage), one hue, monotone lightness. */
+  --ordinal-1: #8FB8DE;
+  --ordinal-2: #397CC0;
+  --ordinal-3: #1F4E80;
+
+  /* Single-hue magnitude bars. */
+  --magnitude-blue: #397CC0;
+  --magnitude-teal: #079AA0;
+
+  --shadow-sm: 0 1px 2px rgba(36, 42, 86, 0.06);
+  --shadow-md: 0 4px 16px rgba(36, 42, 86, 0.08);
+  --radius: 14px;
+  --radius-sm: 9px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  font-family: 'Bariol', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--surface-alt);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 24px 72px;
+}
+
+/* ---------- Header ---------- */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.app-header .eyebrow {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--scape-neon);
+  margin: 0 0 6px;
+}
+
+.app-header h1 {
+  font-family: 'GT Pressura Pro', 'Bariol', sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.08;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+.app-header .range-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-secondary);
+  margin: 0;
+}
+
+.app-header .shared-note {
+  font-size: 13px;
+  color: var(--ink-muted);
+  margin: 4px 0 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: 9px;
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary { background: var(--surface); color: var(--ink); border-color: var(--border-strong); }
+.btn-secondary:hover { background: var(--accent-soft); border-color: var(--scape-bubblegum); }
+.btn-ghost {
+  background: none; border: none; color: var(--ink-muted); font-weight: 700; font-size: 12px;
+  cursor: pointer; padding: 4px 0;
+}
+.btn-ghost:hover { color: var(--link); }
+
+/* ---------- Tabs ---------- */
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 8px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--surface);
+  border: 1.5px solid var(--border-strong);
+  color: var(--ink);
+  cursor: pointer;
+}
+.tab.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.tab .icon-btn {
+  opacity: 0.55;
+  font-size: 11px;
+  width: 18px; height: 18px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  line-height: 1;
+}
+.tab .icon-btn:hover { opacity: 1; background: rgba(255,255,255,0.15); }
+.tab:not(.active) .icon-btn:hover { background: var(--accent-soft); }
+.tab .icon-btn.del:hover { color: var(--status-critical-fill); }
+.tab .icon-btn.edit:hover { color: var(--scape-neon); }
+
+/* ---------- Empty state ---------- */
+.empty-state {
+  background: var(--surface);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--ink-secondary);
+}
+
+/* ---------- KPI stat tiles ---------- */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--scape-bubblegum);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.metric-card .label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-secondary);
+  margin: 0 0 6px;
+}
+.metric-card .value {
+  font-family: 'GT Pressura Pro', 'Bariol', sans-serif;
+  font-weight: 700;
+  font-size: 25px;
+  margin: 0;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.metric-card .deltas {
+  display: flex;
+  gap: 10px;
+  margin: 7px 0 0;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+.delta-chip { display: inline-flex; align-items: center; gap: 3px; }
+.delta-chip.up { color: var(--status-good); }
+.delta-chip.down { color: var(--status-critical); }
+.delta-chip.neutral { color: var(--ink-muted); }
+.delta-chip .tag { font-weight: 600; color: var(--ink-muted); }
+
+/* ---------- Sections & cards ---------- */
+section { margin-bottom: 32px; }
+section > h2 {
+  font-family: 'GT Pressura Pro', 'Bariol', sans-serif;
+  font-weight: 700;
+  font-size: 14.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin: 0 0 12px;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 760px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+}
+.chart-box { width: 100%; height: 260px; }
+.chart-box.tall { height: 320px; }
+.chart-box.short { height: 150px; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+}
+.card ul, .card ol { margin: 0; padding-left: 20px; }
+.card li { margin-bottom: 10px; font-size: 16px; line-height: 1.55; }
+.card li:last-child { margin-bottom: 0; }
+.card.warn { border-left: 4px solid var(--status-warning-fill); }
+
+/* legend chips used under ordinal/status charts */
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-secondary);
+}
+.chart-legend .swatch {
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.chart-legend .dot { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+
+/* ---------- Properties table ---------- */
+.table-scroll { overflow-x: auto; }
+.ptable { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 480px; }
+.ptable th, .ptable td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); }
+.ptable th {
+  color: var(--ink-secondary); font-weight: 700; font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.03em;
+}
+.ptable td.num { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ptable td.won { color: var(--status-good); }
+.ptable td.lost { color: var(--status-critical); }
+.ptable td.dash { color: var(--ink-muted); }
+.ptable tbody tr:hover { background: var(--surface-alt); }
+
+/* ---------- Trend section ---------- */
+.trend-section {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+}
+.trend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+}
+.trend-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+}
+.trend-box .trend-title {
+  font-size: 11.5px; font-weight: 700; color: var(--ink-secondary);
+  text-transform: uppercase; letter-spacing: 0.03em; margin: 0 0 6px;
+}
+
+/* ---------- Recharts tooltip ---------- */
+.viz-tooltip {
+  background: var(--ink);
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 11px;
+  font-size: 12.5px;
+  box-shadow: var(--shadow-md);
+  line-height: 1.4;
+}
+.viz-tooltip .t-label { font-weight: 700; margin-bottom: 2px; }
+
+/* ---------- Modal ---------- */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(36,42,86,0.55);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; z-index: 50;
+}
+.modal {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 26px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 88vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 0;
+  box-shadow: var(--shadow-md);
+}
+.modal h3 {
+  font-family: 'GT Pressura Pro', 'Bariol', sans-serif;
+  font-weight: 700; margin: 0 0 4px; font-size: 18px;
+  text-transform: uppercase; color: var(--ink);
+}
+.modal p.sub { margin: 0 0 18px; font-size: 12.5px; color: var(--ink-secondary); }
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12.5px; font-weight: 700; margin-bottom: 5px; color: var(--ink-secondary); }
+.field input, .field textarea {
+  width: 100%; border: 1px solid var(--border-strong); border-radius: 8px;
+  padding: 9px 10px; font-size: 13.5px; font-family: inherit; color: var(--ink);
+}
+.field input:focus, .field textarea:focus { outline: 2px solid var(--link); outline-offset: 1px; border-color: var(--link); }
+.field textarea { resize: vertical; min-height: 70px; }
+
+.dyn-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.dyn-row { display: flex; gap: 6px; align-items: center; }
+.dyn-row input { flex: 1; min-width: 0; }
+.dyn-row button {
+  flex-shrink: 0; background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: 7px; width: 30px; height: 30px; cursor: pointer; color: var(--status-critical-fill);
+}
+.add-row-btn {
+  font-size: 12px; color: var(--link); background: none; border: none; cursor: pointer;
+  padding: 4px 0; text-align: left; font-weight: 700;
+}
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+
+fieldset { border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin: 0 0 16px; min-width: 0; }
+legend {
+  font-family: 'GT Pressura Pro', 'Bariol', sans-serif; font-weight: 700; font-size: 12px;
+  padding: 0 4px; color: var(--scape-neon); text-transform: uppercase; letter-spacing: 0.03em;
+}
+
+footer.app-footer {
+  text-align: center; font-size: 12px; color: var(--ink-muted); margin-top: 30px;
+}
+
+@media print {
+  .btn, .tabs, .header-actions, .modal-overlay, .add-row-btn, .tab .icon-btn { display: none !important; }
+  body { background: #fff; }
+  .app { padding: 10px; }
+  section, .metric-card, .card, .chart-card, .trend-box, .ptable { break-inside: avoid; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
