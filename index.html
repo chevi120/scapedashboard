@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scape — Weekly Performance Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  @font-face {
+    font-family: 'GT Pressura Pro';
+    src: url('https://www.scape.com.au/wp-content/themes/scape-student/assets/fonts/GTPressuraPro-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Bariol';
+    src: url('https://www.scape.com.au/wp-content/themes/scape-student/assets/fonts/Bariol-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root {
+    --scape-bubblegum: #FA70AB;
+    --scape-salt: #FFDDEE;
+    --scape-neon: #FF007F;
+    --scape-big-apple: #FF222D;
+    --scape-dawn: #F58C34;
+    --scape-zest: #FFF162;
+    --scape-fern: #79BE76;
+    --scape-shamrock: #055755;
+    --scape-reef: #00B7BD;
+    --scape-mist: #B2DDE7;
+    --scape-harbour: #397CC0;
+    --scape-ocean: #242A56;
+    --scape-dusk: #814496;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Bariol', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #ffffff;
+    color: var(--scape-ocean);
+    margin: 0;
+    padding: 32px 20px 60px;
+    font-size: 18px;
+  }
+  .container { max-width: 1040px; margin: 0 auto; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+  header h1 {
+    font-family: 'GT Pressura Pro', 'Bariol', sans-serif; font-weight: 700;
+    font-size: 34px; letter-spacing: 0.2px; margin: 0 0 6px; color: var(--scape-ocean);
+    text-transform: uppercase;
+  }
+  .title-highlight {
+    background-image: linear-gradient(rgb(255, 241, 98), rgb(255, 241, 98));
+    background-repeat: no-repeat;
+    -webkit-box-decoration-break: clone;
+    color: var(--scape-neon, #ff007f);
+    display: inline;
+    font-size: 45px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 90%;
+    text-transform: uppercase;
+    animation: 0.8s ease-out 0s 1 normal forwards fillText;
+    background-position: 0px center;
+    padding: 0px 16px;
+  }
+  @keyframes fillText {
+    from { background-size: 0px 100%; }
+    to { background-size: 100% 100%; }
+  }
+  @media (max-width: 640px) {
+    .title-highlight { font-size: 34px; padding: 0px 10px; }
+  }
+  header p { font-size: 18px; color: var(--scape-ocean); margin: 0; }
+  .btn {
+    background: var(--scape-neon); color: #fff; border: none; border-radius: 8px;
+    padding: 9px 16px; font-size: 13px; font-weight: 700; cursor: pointer;
+    font-family: 'Bariol', sans-serif;
+  }
+  .btn:hover { background: var(--scape-bubblegum); }
+  .btn.secondary { background: #fff; color: var(--scape-ocean); border: 1px solid var(--scape-mist); }
+  .btn.secondary:hover { background: var(--scape-salt); }
+  .btn.danger { background: #fff; color: var(--scape-big-apple); border: 1px solid #ffd3d3; padding: 4px 8px; font-size: 11px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
+  .tab {
+    position: relative;
+    padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 700;
+    background: #fff; border: 1.5px solid var(--scape-mist); cursor: pointer; color: var(--scape-ocean);
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Bariol', sans-serif;
+  }
+  .tab.active { background: var(--scape-ocean); color: #fff; border-color: var(--scape-ocean); }
+  .tab .del { opacity: 0.5; font-size: 11px; }
+  .tab .del:hover { opacity: 1; color: var(--scape-big-apple); }
+  .tab .edit { opacity: 0.5; font-size: 12px; }
+  .tab .edit:hover { opacity: 1; color: var(--scape-neon); }
+  .empty-state { background: #fff; border: 1px dashed var(--scape-mist); border-radius: 12px; padding: 40px; text-align: center; color: var(--scape-ocean); }
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 32px; }
+  .metric-card {
+    background: #fff; border: 1px solid var(--scape-mist); border-top: 3px solid var(--scape-bubblegum);
+    border-radius: 12px; padding: 14px 16px;
+  }
+  .metric-card p.label { font-size: 12px; color: var(--scape-ocean); margin: 0 0 6px; font-weight: 600; }
+  .metric-card p.value {
+    font-family: 'GT Pressura Pro', 'Bariol', sans-serif; font-weight: 700;
+    font-size: 26px; margin: 0; color: var(--scape-ocean);
+  }
+  .metric-card p.delta { font-size: 11.5px; margin: 6px 0 0; font-weight: 600; }
+  .delta-down { color: var(--scape-big-apple); } .delta-up { color: var(--scape-shamrock); } .delta-neutral { color: var(--scape-ocean); }
+  section { margin-bottom: 36px; }
+  section h2 {
+    font-family: 'GT Pressura Pro', 'Bariol', sans-serif; font-weight: 700;
+    font-size: 16px; margin: 0 0 14px; color: var(--scape-ocean); text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .chart-box { position: relative; width: 100%; height: 260px; background: #fff; border: 1px solid var(--scape-mist); border-radius: 12px; padding: 14px; }
+  .chart-box.tall { height: 300px; }
+  .card { background: #fff; border: 1px solid var(--scape-mist); border-radius: 12px; padding: 18px 20px; }
+  .card ul, .card ol { margin: 0; padding-left: 20px; }
+  .card li { margin-bottom: 10px; font-size: 18px; line-height: 1.55; }
+  .card li:last-child { margin-bottom: 0; }
+  .warn { border-left: 4px solid var(--scape-dawn); }
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(36,42,86,0.55); display: none;
+    align-items: center; justify-content: center; padding: 20px; z-index: 50;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #fff; border-radius: 14px; padding: 24px; width: 100%; max-width: 640px;
+    max-height: 88vh; overflow-y: auto;
+  }
+  .modal h3 { font-family: 'GT Pressura Pro', 'Bariol', sans-serif; font-weight: 700; margin: 0 0 4px; font-size: 18px; color: var(--scape-ocean); text-transform: uppercase; }
+  .modal p.sub { margin: 0 0 18px; font-size: 12.5px; color: var(--scape-ocean); }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 5px; color: var(--scape-ocean); }
+  .field input, .field textarea, .field select {
+    width: 100%; border: 1px solid var(--scape-mist); border-radius: 7px; padding: 8px 10px; font-size: 13px; font-family: inherit;
+  }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--scape-neon); }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .row3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; }
+  .row2 { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; }
+  .dyn-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+  .dyn-row { display: flex; gap: 6px; align-items: center; }
+  .dyn-row input { flex: 1; }
+  .dyn-row button { flex-shrink: 0; background: #fff; border: 1px solid var(--scape-mist); border-radius: 6px; width: 28px; height: 28px; cursor: pointer; color: var(--scape-big-apple); }
+  .add-row-btn { font-size: 12px; color: var(--scape-harbour); background: none; border: none; cursor: pointer; padding: 4px 0; text-align: left; font-weight: 600; }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+  .mode-toggle { font-size: 12px; color: var(--scape-harbour); background: none; border: none; cursor: pointer; margin-bottom: 14px; font-weight: 600; }
+  fieldset { border: 1px solid var(--scape-salt); border-radius: 10px; padding: 12px 14px; margin: 0 0 16px; }
+  legend {
+    font-family: 'GT Pressura Pro', 'Bariol', sans-serif; font-weight: 700;
+    font-size: 12px; padding: 0 4px; color: var(--scape-neon); text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  footer { text-align: center; font-size: 12px; color: var(--scape-ocean); margin-top: 30px; }
+  .shared-note { font-size: 18px; color: var(--scape-ocean); margin-top: 2px; }
+
+  .ptable { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .ptable th, .ptable td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--scape-salt); }
+  .ptable th { color: var(--scape-ocean); font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .ptable td.num { text-align: right; font-weight: 600; }
+  .ptable td.won { color: var(--scape-shamrock); }
+  .ptable td.lost { color: var(--scape-big-apple); }
+  .ptable td.dash { color: var(--scape-mist); }
+
+  .trend-section { margin-bottom: 40px; padding-bottom: 28px; border-bottom: 2px solid var(--scape-salt); }
+  .trend-section h2 {
+    font-family: 'GT Pressura Pro', 'Bariol', sans-serif; font-weight: 700;
+    font-size: 16px; margin: 0 0 14px; color: var(--scape-ocean); text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .trend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .trend-box { background: #fff; border: 1px solid var(--scape-mist); border-radius: 12px; padding: 12px; }
+  .trend-box p.trend-title { font-size: 12px; font-weight: 700; color: var(--scape-ocean); text-transform: uppercase; margin: 0 0 8px; letter-spacing: 0.3px; }
+  .trend-box .chart-box { height: 150px; padding: 8px; border: none; }
+
+  @media print {
+    .btn, .tabs, #trendActionsRow, .modal-overlay, .add-row-btn, .tab .del, .tab .edit { display: none !important; }
+    body { padding: 10px; }
+    section, .metric-card, .card, .chart-box, .trend-box, .ptable { break-inside: avoid; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div>
+      <h1><span class="title-highlight">Scape · Weekly Performance Dashboard</span></h1>
+      <p id="rangeLabel">Loading...</p>
+      <p class="shared-note">Shared with the team &middot; visible to anyone who opens this link</p>
+    </div>
+    <div style="display:flex; gap:8px;" id="trendActionsRow">
+      <button class="btn secondary" id="exportBtn">Export JSON</button>
+      <button class="btn secondary" id="exportPdfBtn">Export PDF</button>
+      <button class="btn" id="addReportBtn">+ New weekly report</button>
+    </div>
+  </header>
+
+  <div id="trendRoot"></div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div id="dashboardRoot"></div>
+
+</div>
+
+<!-- Add / Edit Report Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle">New weekly report</h3>
+    <p class="sub">Fill in the key figures for the week. Any field you leave blank simply won't show up on the dashboard.</p>
+    <button class="mode-toggle" id="toggleAdvanced">Advanced mode (paste JSON) →</button>
+
+    <div id="simpleMode">
+      <fieldset>
+        <legend>Week</legend>
+        <div class="field"><label>Label (e.g. "W31 (27 Jul - 2 Aug 2026)")</label><input id="f_label" placeholder="W31 (27 Jul - 2 Aug 2026)"></div>
+        <div class="field"><label>Start date (used for sorting, format YYYY-MM-DD)</label><input id="f_date" type="date"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Main KPIs</legend>
+        <div class="dyn-list" id="kpiList"></div>
+        <button class="add-row-btn" data-add="kpi">+ add KPI</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Pipeline by stage</legend>
+        <div class="dyn-list" id="pipelineList"></div>
+        <button class="add-row-btn" data-add="pipeline">+ add stage</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Channels (opportunities + CVR%)</legend>
+        <div class="dyn-list" id="channelList"></div>
+        <button class="add-row-btn" data-add="channel">+ add channel</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Cities (% demand)</legend>
+        <div class="dyn-list" id="cityList"></div>
+        <button class="add-row-btn" data-add="city">+ add city</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Top properties (active / won / lost)</legend>
+        <div class="dyn-list" id="propertyList"></div>
+        <button class="add-row-btn" data-add="property">+ add property</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Traffic by channel (WoW %)</legend>
+        <div class="dyn-list" id="trafficList"></div>
+        <button class="add-row-btn" data-add="traffic">+ add traffic channel</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Key insights</legend>
+        <textarea id="f_insights" placeholder="One insight per line"></textarea>
+      </fieldset>
+
+      <fieldset>
+        <legend>Notes / gaps / decisions</legend>
+        <textarea id="f_notes" placeholder="One note per line"></textarea>
+      </fieldset>
+    </div>
+
+    <div id="advancedMode" style="display:none;">
+      <div class="field">
+        <label>Report JSON</label>
+        <textarea id="f_json" style="min-height:260px; font-family: monospace; font-size:12px;"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn secondary" id="cancelBtn">Cancel</button>
+      <button class="btn" id="saveReportBtn">Save report</button>
+    </div>
+  </div>
+</div>
+
+<!-- Export Helper Modal (fallback for sandboxed previews that block downloads/print) -->
+<div class="modal-overlay" id="helperModalOverlay">
+  <div class="modal" style="max-width:560px;">
+    <h3 id="helperModalTitle">Export</h3>
+    <p class="sub" id="helperModalText"></p>
+    <div id="helperModalExtra"></div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="helperModalCloseBtn">Close</button>
+      <button class="btn" id="helperModalActionBtn" style="display:none;"></button>
+    </div>
+  </div>
+</div>
+
+<footer>Weekly Performance Dashboard &middot; reports are saved persistently for the team</footer>
+
+<script>
+const STORAGE_PREFIX = 'report:';
+let reports = [];
+let selectedId = null;
+let charts = {};
+
+// ---------- Seed data (Week 1 + Week 2, from provided reports) ----------
+function seedReports() {
+  return [
+    {
+      id: 'w29-2026',
+      version: 3,
+      label: 'W29 (13–19 Jul 2026)',
+      date: '2026-07-13',
+      kpis: [
+        { label: 'Website sessions', value: '48,000', wow: -17, yoy: -24 },
+        { label: 'Total leads', value: '716', wow: null, yoy: null },
+        { label: 'Leads (web)', value: '592', wow: 10.04, yoy: null },
+        { label: 'Bookings', value: '321', wow: 4.9, yoy: null },
+        { label: 'Win rate', value: '67.2%', wow: null, yoy: null },
+        { label: 'Adjusted win rate (ex dup/junk)', value: '81.4%', wow: null, yoy: null }
+      ],
+      pipeline: [
+        { stage: 'Closed Won', count: 240 },
+        { stage: 'Discovery', count: 193 },
+        { stage: 'Closed Lost', count: 117 },
+        { stage: 'Tentative Booking', count: 105 },
+        { stage: 'Room Proposal', count: 74 },
+        { stage: 'Waitlist', count: 11 }
+      ],
+      channels: [
+        { name: 'Agent Portal', opportunities: 240, cvr: 88.3 },
+        { name: 'WhatsApp', opportunities: 93, cvr: 25.9 },
+        { name: 'Waitlist Fully Booked', opportunities: 90, cvr: 50.0 },
+        { name: 'Book a Tour', opportunities: 80, cvr: 22.2 },
+        { name: 'Webchat', opportunities: 32, cvr: 25.0 },
+        { name: 'Contact Us General', opportunities: 26, cvr: 10.0 }
+      ],
+      cities: [
+        { name: 'Melbourne', pct: 35.7 },
+        { name: 'Sydney', pct: 30.8 },
+        { name: 'Brisbane', pct: 25.9 }
+      ],
+      traffic: [],
+      properties: [
+        { name: 'Scape Swanston', active: 19, won: null, lost: null },
+        { name: 'Scape Abercrombie', active: 17, won: null, lost: null },
+        { name: 'Scape Redfern', active: 17, won: 27, lost: null }
+      ],
+      insights: [
+        'Lead quality, not conversion, is the main problem: overall win rate is 67.2%, but excluding duplicate/junk it rises to 81.4%.',
+        'Agent Portal is the most efficient channel (88.3% CVR); WhatsApp, Book a Tour and Contact Us General generate almost 200 combined opportunities but convert poorly.',
+        'Traffic fell 17% WoW but engagement time rose 18% YoY: fewer visitors, but more qualified.'
+      ],
+      notes: []
+    },
+    {
+      id: 'w31-2026',
+      version: 1,
+      label: 'W31 (27–31 Jul 2026)',
+      date: '2026-07-27',
+      kpis: [
+        { label: 'Website sessions', value: '48,000', wow: -17, yoy: -24 },
+        { label: 'Total leads', value: '716', wow: -13.8, yoy: -8.6 },
+        { label: 'Opportunities created', value: '740', wow: null, yoy: null },
+        { label: 'Total bookings', value: '321', wow: 4.9, yoy: -23.0 },
+        { label: 'Total cancellations', value: '72', wow: null, yoy: null },
+        { label: 'Win rate', value: '67.2%', wow: null, yoy: null },
+        { label: 'Adjusted win rate (ex dup/junk)', value: '81.4%', wow: null, yoy: null }
+      ],
+      pipeline: [
+        { stage: 'Closed Won', count: 240 },
+        { stage: 'Discovery', count: 193 },
+        { stage: 'Closed Lost', count: 117 },
+        { stage: 'Tentative Booking', count: 105 },
+        { stage: 'Room Proposal', count: 74 },
+        { stage: 'Waitlist', count: 11 }
+      ],
+      channels: [
+        { name: 'Agent Portal', opportunities: 240, cvr: 88.3 },
+        { name: 'WhatsApp', opportunities: 93, cvr: 25.9 },
+        { name: 'Waitlist Fully Booked', opportunities: 90, cvr: 50.0 },
+        { name: 'Book a Tour', opportunities: 80, cvr: 22.2 },
+        { name: 'Webchat', opportunities: 32, cvr: 25.0 },
+        { name: 'Contact Us General', opportunities: 26, cvr: 10.0 },
+        { name: 'City Guide — Sydney', opportunities: 9, cvr: 20.0 },
+        { name: 'Refer a Friend', opportunities: 7, cvr: 33.3 },
+        { name: 'City Guide — Adelaide', opportunities: 6, cvr: 0.0 },
+        { name: 'City Guide — Melbourne', opportunities: 6, cvr: 0.0 }
+      ],
+      cities: [
+        { name: 'Melbourne', pct: 35.7 },
+        { name: 'Sydney', pct: 30.8 },
+        { name: 'Brisbane', pct: 25.9 },
+        { name: 'Adelaide', pct: 7.6 }
+      ],
+      traffic: [],
+      properties: [
+        { name: 'Scape Swanston', active: 19, won: null, lost: null },
+        { name: 'Scape Abercrombie', active: 17, won: null, lost: null },
+        { name: 'Scape Redfern', active: 17, won: 27, lost: null },
+        { name: 'Scape Toowong', active: 15, won: null, lost: null },
+        { name: 'Scape South Bank', active: 15, won: null, lost: null },
+        { name: 'Scape Peel', active: 15, won: null, lost: null },
+        { name: 'Scape La Trobe', active: 13, won: null, lost: null },
+        { name: 'Scape Tribune', active: 13, won: null, lost: null },
+        { name: 'Scape Darling Square', active: null, won: 14, lost: null },
+        { name: 'Scape at University of Sydney', active: null, won: 14, lost: null },
+        { name: 'Scape Adelaide Central', active: null, won: 13, lost: null },
+        { name: 'Scape Lachlan', active: null, won: 11, lost: null },
+        { name: 'Scape Darling House', active: null, won: 10, lost: null }
+      ],
+      insights: [
+        'Soft traffic, resilient bookings: sessions fell 17% WoW and 24% YoY (the steepest decline in recent weeks), yet total bookings still grew +4.9% WoW, with Agent, Direct and Web all up week on week.',
+        'Agent-channel softness drives the YoY booking decline (-23.0%): Agent bookings are down 38.5% YoY while Direct is up 12.7% YoY and Web is up 48.1% YoY; Agent also cancels at 24.6% vs Direct\'s 19.7%.',
+        'Agent Portal\'s untracked lead volume keeps growing — now 32% of all opportunities (up from 29% the prior week) while still missing entirely from the Leads export, understating true top-of-funnel volume.',
+        'Speed to decision is a key lever: Closed Won opportunities close in 19.8 days on average vs 57.3 days for Closed Lost — genuine losses sit in the pipeline nearly 3x longer, overstating active pipeline health.'
+      ],
+      notes: [
+        'Sent by Jody on Aug 3, 2026 (originally mislabeled in the source document as W29 — actual coverage period is 27–31 Jul 2026).',
+        'GAP: no dedicated CRM reconciliation feed provided again this week — recommend RevOps supply this as a standard weekly export.',
+        'GAP: no GA4 channel acquisition or page-performance export was provided this week — only headline sessions/active users/engagement-time figures; recommend restoring the full export.',
+        'Chinese channels (WeCom) at zero tracked opportunities this week, down from 1 the prior week, against a feed that has historically run 20–60 applications/week — flagged urgent.',
+        'Bookings don\'t fully reconcile to Closed Won: 321 bookings vs 240 Closed Won — an 81-booking gap (~75% reconciled this week, up from ~60% the prior week).',
+        '214 of 383 active opportunities (56%) have close dates defaulted to 27 Sep–3 Oct (Semester 2 fiscal-period default) — not a genuine forecast spike.',
+        'Austrade Education Agent Info Session produced 79 leads the prior week and 0 this week — confirm whether the series ended or simply didn\'t run.',
+        'CEO decisions: (1) fix the Agent Portal lead-to-opportunity match before relying on the Leads total for planning; (2) check whether this week\'s traffic drop is genuine demand/seasonality or a channel/tracking change; (3) review Agent booking quality/vetting given the 24.6% vs 19.7% cancellation gap; (4) review response time and qualification on WhatsApp, Book a Tour and Contact Us General (199 opportunities, 6.0% blended CVR).'
+      ]
+    },
+    {
+      id: 'w30-2026',
+      version: 1,
+      label: 'W30 (20–26 Jul 2026)',
+      date: '2026-07-20',
+      kpis: [
+        { label: 'Website sessions (headline)', value: '40,148', wow: -15.5, yoy: -31.3 },
+        { label: 'Website sessions (GA4 detail)', value: '39,569', wow: -17.86, yoy: null },
+        { label: 'Total leads (CRM, deduped)', value: '784', wow: 19.7, yoy: -2.6 },
+        { label: 'Leads (GA4 tracked)', value: '512', wow: null, yoy: null },
+        { label: 'Opportunities created', value: '881', wow: null, yoy: null },
+        { label: 'Total bookings', value: '282', wow: -10.2, yoy: -25.6 },
+        { label: 'Web Purchases', value: '35', wow: -20.45, yoy: null },
+        { label: 'Revenue tracked', value: '$649,120', wow: -11.53, yoy: -16.5 },
+        { label: 'Win rate', value: '55.2%', wow: null, yoy: null },
+        { label: 'Adjusted win rate (ex dup/junk)', value: '78.1%', wow: null, yoy: null }
+      ],
+      pipeline: [
+        { stage: 'Discovery', count: 258 },
+        { stage: 'Closed Won', count: 218 },
+        { stage: 'Closed Lost', count: 177 },
+        { stage: 'Tentative Booking', count: 114 },
+        { stage: 'Room Proposal', count: 95 },
+        { stage: 'Waitlist', count: 19 }
+      ],
+      channels: [
+        { name: 'Agent Portal', opportunities: 253, cvr: 77.9 },
+        { name: 'Blank/Unspecified', opportunities: 168, cvr: 72.9 },
+        { name: 'Book a Tour', opportunities: 124, cvr: 20.6 },
+        { name: 'WhatsApp', opportunities: 108, cvr: 16.2 },
+        { name: 'Waitlist Fully Booked', opportunities: 90, cvr: 23.5 },
+        { name: 'Webchat', opportunities: 44, cvr: 16.7 },
+        { name: 'Contact Us General', opportunities: 40, cvr: 10.5 },
+        { name: 'City Guide — Melbourne', opportunities: 14, cvr: 0.0 },
+        { name: 'City Guide — Sydney', opportunities: 14, cvr: 0.0 },
+        { name: 'Refer a Friend', opportunities: 10, cvr: 75.0 },
+        { name: 'City Guide — Brisbane', opportunities: 6, cvr: 0.0 }
+      ],
+      cities: [
+        { name: 'Sydney (active pipeline)', pct: 37.3 },
+        { name: 'Melbourne (active pipeline)', pct: 36.5 }
+      ],
+      traffic: [
+        { name: 'Email', wow: 49.23 },
+        { name: 'Display', wow: 22.80 },
+        { name: 'Paid Search', wow: 2.12 },
+        { name: 'Organic Search', wow: -5.48 },
+        { name: 'Direct', wow: -3.19 },
+        { name: 'Referral', wow: -8.18 },
+        { name: 'Paid Social', wow: -25.39 },
+        { name: 'Paid Other', wow: -77.9 },
+        { name: 'Unassigned', wow: -76.5 }
+      ],
+      properties: [
+        { name: 'Scape Darling House', active: null, won: 15, lost: null },
+        { name: 'Scape Darling Square', active: null, won: 15, lost: null },
+        { name: 'Scape Swanston', active: null, won: 12, lost: 8 },
+        { name: 'Scape Uni Square', active: null, won: 10, lost: null },
+        { name: 'Scape at University of Sydney', active: null, won: 10, lost: 8 },
+        { name: 'Scape Cleveland', active: null, won: 10, lost: null },
+        { name: 'Scape Internal', active: null, won: null, lost: 47 },
+        { name: 'Scape Adelaide Central', active: null, won: null, lost: 9 }
+      ],
+      insights: [
+        'The story of the week is Agent vs Direct: Agent bookings -43.1% YoY and -15.9% WoW, while Direct is up +12.6% YoY and roughly flat WoW — Direct is now 47.5% of total bookings.',
+        'The true win rate (78.1% ex duplicate/junk) remains far healthier than the headline (55.2%); 65.5% of losses are Duplicate or Junk — a data-hygiene issue, not a leasing-performance one.',
+        'On-site key events rose +156.7% YoY while traffic fell -31.3% YoY: a smaller but far more engaged audience — worth tracking whether this converts into bookings.',
+        'Email was the strongest traffic channel this week (+49% WoW), while Paid Social (-25%) and Paid Other/Unassigned (-77%/-76%) drove the overall decline.'
+      ],
+      notes: [
+        'GAP: no CRM/GA4 reconciliation feed — fourth consecutive week without this data.',
+        'Agent Portal (253 opportunities, 28.7% of total) is still missing from the Leads export — the largest unresolved tracking gap.',
+        'The qut-openday-2026 (92 leads) and uq-openday-2026 (86 leads) campaigns — 19% of this week\'s lead volume — have zero matching opportunities in the CRM.',
+        'Chinese channels (WeCom) at zero tracked opportunities for a second consecutive week — worth escalating directly with the integration owner.',
+        '42% of this week\'s opportunities (369) have a close date defaulted to 30/9/2026 (semester end) — confirm this is excluded from any forecasting.',
+        'City Guide converted at 0.0% across all three cities this week (0 of 34 decided) — review lead quality before continuing to invest.',
+        'Hamza Rehman still carries the largest book on the leasing team (128 opportunities, 14.5% of total) — worth a capacity review.'
+      ]
+    }
+  ];
+}
+
+// ---------- Storage helpers ----------
+async function loadReports() {
+  try {
+    const seeds = seedReports();
+    const seedMap = {};
+    seeds.forEach(s => { seedMap[s.id] = s; });
+
+    const listRes = await window.storage.list(STORAGE_PREFIX, true);
+    const keys = (listRes && listRes.keys) || [];
+
+    const out = [];
+    const seenIds = new Set();
+
+    for (const key of keys) {
+      try {
+        const res = await window.storage.get(key, true);
+        if (!res || !res.value) continue;
+        let stored = JSON.parse(res.value);
+        seenIds.add(stored.id);
+        const seed = seedMap[stored.id];
+        // If a newer seed version exists for a report we manage (W29, W30, etc.),
+        // refresh it in storage without touching reports the user added manually.
+        if (seed && (Number(seed.version) || 0) > (Number(stored.version) || 0)) {
+          await window.storage.set(key, JSON.stringify(seed), true);
+          stored = seed;
+        }
+        out.push(stored);
+      } catch (e) { /* skip unreadable key */ }
+    }
+
+    // Add any seed reports that aren't in storage yet (first run, or a brand new seeded week).
+    for (const s of seeds) {
+      if (!seenIds.has(s.id)) {
+        await window.storage.set(STORAGE_PREFIX + s.id, JSON.stringify(s), true);
+        out.push(s);
+      }
+    }
+
+    return out.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  } catch (e) {
+    console.error('Storage load failed', e);
+    return seedReports();
+  }
+}
+
+async function saveReport(report) {
+  await window.storage.set(STORAGE_PREFIX + report.id, JSON.stringify(report), true);
+}
+
+async function deleteReport(id) {
+  await window.storage.delete(STORAGE_PREFIX + id, true);
+}
+
+// ---------- Rendering ----------
+function fmtDelta(v, suffix) {
+  if (v === null || v === undefined || v === '') return '';
+  const num = Number(v);
+  const cls = num > 0 ? 'delta-up' : num < 0 ? 'delta-down' : 'delta-neutral';
+  const arrow = num > 0 ? '↑' : num < 0 ? '↓' : '';
+  return `<span class="${cls}">${arrow} ${num > 0 ? '+' : ''}${num}% ${suffix}</span>`;
+}
+
+function renderTabs() {
+  const tabsEl = document.getElementById('tabs');
+  tabsEl.innerHTML = '';
+  reports.forEach(r => {
+    const tab = document.createElement('div');
+    tab.className = 'tab' + (r.id === selectedId ? ' active' : '');
+    tab.innerHTML = `<span>${r.label}</span>`;
+    tab.addEventListener('click', () => { selectedId = r.id; renderAll(); });
+    const edit = document.createElement('span');
+    edit.className = 'edit';
+    edit.textContent = '✎';
+    edit.title = 'Edit report';
+    edit.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openEditModal(r);
+    });
+    tab.appendChild(edit);
+    const del = document.createElement('span');
+    del.className = 'del';
+    del.textContent = '✕';
+    del.title = 'Delete report';
+    del.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!confirm(`Delete report "${r.label}"? This cannot be undone.`)) return;
+      await deleteReport(r.id);
+      reports = await loadReports();
+      selectedId = reports.length ? reports[reports.length - 1].id : null;
+      renderAll();
+    });
+    tab.appendChild(del);
+    tabsEl.appendChild(tab);
+  });
+}
+
+function destroyCharts() {
+  Object.values(charts).forEach(c => c && c.destroy());
+  charts = {};
+}
+
+function renderDashboard(report) {
+  const root = document.getElementById('dashboardRoot');
+  document.getElementById('rangeLabel').textContent = report ? report.label : 'No reports yet';
+
+  if (!report) {
+    root.innerHTML = `<div class="empty-state">No reports saved yet. Use "+ New weekly report" to add the first one.</div>`;
+    return;
+  }
+
+  destroyCharts();
+
+  let html = '';
+
+  // KPI cards
+  if (report.kpis && report.kpis.length) {
+    html += '<div class="metrics">';
+    report.kpis.forEach(k => {
+      html += `<div class="metric-card">
+        <p class="label">${k.label}</p>
+        <p class="value">${k.value}</p>
+        <p class="delta">${fmtDelta(k.wow, 'WoW')} ${k.wow != null && k.yoy != null ? '&middot;' : ''} ${fmtDelta(k.yoy, 'YoY')}</p>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  // Charts row 1: pipeline + cities
+  html += '<div class="grid-2">';
+  if (report.pipeline && report.pipeline.length) {
+    html += `<section style="margin-bottom:0;"><h2>Pipeline by stage</h2><div class="chart-box"><canvas id="chart_pipeline"></canvas></div></section>`;
+  }
+  if (report.cities && report.cities.length) {
+    html += `<section style="margin-bottom:0;"><h2>Demand by city</h2><div class="chart-box"><canvas id="chart_city"></canvas></div></section>`;
+  }
+  html += '</div><div style="height:24px;"></div>';
+
+  if (report.channels && report.channels.length) {
+    html += `<section><h2>Conversion by channel</h2><div class="chart-box tall"><canvas id="chart_channel"></canvas></div></section>`;
+  }
+
+  if (report.properties && report.properties.length) {
+    const rows = report.properties.map(p => {
+      const cell = (v, cls) => v === null || v === undefined ? '<td class="num dash">—</td>' : `<td class="num ${cls || ''}">${v}</td>`;
+      return `<tr><td>${p.name}</td>${cell(p.active)}${cell(p.won, 'won')}${cell(p.lost, 'lost')}</tr>`;
+    }).join('');
+    html += `<section><h2>Top properties</h2><div class="card">
+      <table class="ptable">
+        <thead><tr><th>Property</th><th style="text-align:right;">Active pipeline</th><th style="text-align:right;">Closed Won</th><th style="text-align:right;">Closed Lost</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div></section>`;
+  }
+
+  if (report.traffic && report.traffic.length) {
+    html += `<section><h2>Traffic by channel (WoW %)</h2><div class="chart-box"><canvas id="chart_traffic"></canvas></div></section>`;
+  }
+
+  if (report.insights && report.insights.length) {
+    html += `<section><h2>Key insights</h2><div class="card"><ol>${report.insights.map(i => `<li>${i}</li>`).join('')}</ol></div></section>`;
+  }
+
+  if (report.notes && report.notes.length) {
+    html += `<section><h2>Notes, gaps & decisions</h2><div class="card warn"><ul>${report.notes.map(n => `<li>${n}</li>`).join('')}</ul></div></section>`;
+  }
+
+  root.innerHTML = html;
+
+  const muted = '#242A56';
+  const grid = '#FFDDEE';
+
+  if (report.pipeline && report.pipeline.length) {
+    const stageColorMap = {
+      'closed won': '#055755',      // Shamrock
+      'discovery': '#397CC0',       // Harbour
+      'closed lost': '#FF222D',     // Big Apple
+      'tentative booking': '#F58C34', // Dawn
+      'room proposal': '#00B7BD',   // Reef
+      'waitlist': '#814496'         // Dusk
+    };
+    const fallbackPalette = ['#FA70AB', '#79BE76', '#397CC0', '#F58C34', '#00B7BD', '#814496'];
+    const colors = report.pipeline.map((p, i) => stageColorMap[p.stage.trim().toLowerCase()] || fallbackPalette[i % fallbackPalette.length]);
+    charts.pipeline = new Chart(document.getElementById('chart_pipeline'), {
+      type: 'bar',
+      data: { labels: report.pipeline.map(p => p.stage), datasets: [{ data: report.pipeline.map(p => p.count), backgroundColor: colors, borderRadius: 4, barThickness: 22 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw + ' opportunities' } } },
+        scales: { x: { ticks: { color: muted, font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: muted }, grid: { color: grid }, beginAtZero: true } }
+      }
+    });
+  }
+
+  if (report.cities && report.cities.length) {
+    charts.city = new Chart(document.getElementById('chart_city'), {
+      type: 'bar',
+      data: { labels: report.cities.map(c => c.name), datasets: [{ data: report.cities.map(c => c.pct), backgroundColor: '#397CC0', borderRadius: 4, barThickness: 32 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw + '%' } } },
+        scales: { x: { ticks: { color: muted, font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: muted, callback: v => v + '%' }, grid: { color: grid }, beginAtZero: true } }
+      }
+    });
+  }
+
+  if (report.channels && report.channels.length) {
+    charts.channel = new Chart(document.getElementById('chart_channel'), {
+      type: 'bar',
+      data: { labels: report.channels.map(c => c.name), datasets: [{ data: report.channels.map(c => c.cvr), backgroundColor: '#00B7BD', borderRadius: 4, barThickness: 16 }] },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw + '% CVR' } } },
+        scales: { x: { ticks: { color: muted, callback: v => v + '%' }, grid: { color: grid }, beginAtZero: true, max: 100 }, y: { ticks: { color: muted, font: { size: 11 } }, grid: { display: false } } }
+      }
+    });
+  }
+
+  if (report.traffic && report.traffic.length) {
+    charts.traffic = new Chart(document.getElementById('chart_traffic'), {
+      type: 'bar',
+      data: {
+        labels: report.traffic.map(t => t.name),
+        datasets: [{ data: report.traffic.map(t => t.wow), backgroundColor: report.traffic.map(t => t.wow >= 0 ? '#79BE76' : '#FF222D'), borderRadius: 4, barThickness: 20 }]
+      },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => (c.raw > 0 ? '+' : '') + c.raw + '% WoW' } } },
+        scales: { x: { ticks: { color: muted, callback: v => v + '%' }, grid: { color: grid } }, y: { ticks: { color: muted, font: { size: 11 } }, grid: { display: false } } }
+      }
+    });
+  }
+}
+
+let trendCharts = {};
+
+function extractMetric(report, type) {
+  if (!report.kpis || !report.kpis.length) return null;
+  let candidates = [];
+  const labelHas = (k, re) => re.test(k.label);
+  if (type === 'sessions') {
+    candidates = report.kpis.filter(k => labelHas(k, /session/i));
+  } else if (type === 'leads') {
+    candidates = report.kpis.filter(k => labelHas(k, /lead/i) && labelHas(k, /total/i));
+    if (!candidates.length) candidates = report.kpis.filter(k => labelHas(k, /lead/i));
+  } else if (type === 'bookings') {
+    candidates = report.kpis.filter(k => labelHas(k, /booking/i) && labelHas(k, /total/i));
+    if (!candidates.length) candidates = report.kpis.filter(k => labelHas(k, /booking/i));
+  } else if (type === 'winrate') {
+    candidates = report.kpis.filter(k => /^win rate$/i.test(k.label.trim()));
+    if (!candidates.length) candidates = report.kpis.filter(k => labelHas(k, /win rate/i) && !labelHas(k, /adjusted/i));
+  }
+  if (!candidates.length) return null;
+  const num = parseFloat(String(candidates[0].value).replace(/[^0-9.\-]/g, ''));
+  return isNaN(num) ? null : num;
+}
+
+function destroyTrendCharts() {
+  Object.values(trendCharts).forEach(c => c && c.destroy());
+  trendCharts = {};
+}
+
+function renderTrend() {
+  const root = document.getElementById('trendRoot');
+  destroyTrendCharts();
+
+  if (!reports || reports.length < 2) {
+    root.innerHTML = '';
+    return;
+  }
+
+  const labels = reports.map(r => r.label);
+  const series = {
+    sessions: reports.map(r => extractMetric(r, 'sessions')),
+    leads: reports.map(r => extractMetric(r, 'leads')),
+    bookings: reports.map(r => extractMetric(r, 'bookings')),
+    winrate: reports.map(r => extractMetric(r, 'winrate'))
+  };
+
+  root.innerHTML = `
+    <div class="trend-section">
+      <h2>Trend across weeks</h2>
+      <div class="trend-grid">
+        <div class="trend-box"><p class="trend-title">Website sessions</p><div class="chart-box"><canvas id="trend_sessions"></canvas></div></div>
+        <div class="trend-box"><p class="trend-title">Total leads</p><div class="chart-box"><canvas id="trend_leads"></canvas></div></div>
+        <div class="trend-box"><p class="trend-title">Bookings</p><div class="chart-box"><canvas id="trend_bookings"></canvas></div></div>
+        <div class="trend-box"><p class="trend-title">Win rate %</p><div class="chart-box"><canvas id="trend_winrate"></canvas></div></div>
+      </div>
+    </div>`;
+
+  const muted = '#242A56';
+  const grid = '#FFDDEE';
+  const selIndex = reports.findIndex(r => r.id === selectedId);
+
+  function lineChart(canvasId, data, color, isPct) {
+    const radii = data.map((_, i) => i === selIndex ? 7 : 4);
+    const borderW = data.map((_, i) => i === selIndex ? 3 : 1);
+    return new Chart(document.getElementById(canvasId), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          data, borderColor: color, backgroundColor: color, tension: 0.3,
+          pointRadius: radii, pointBackgroundColor: color,
+          pointBorderColor: '#242A56', pointBorderWidth: borderW,
+          spanGaps: true
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.raw + (isPct ? '%' : '') } } },
+        scales: {
+          x: {
+            ticks: {
+              color: (ctx) => ctx.index === selIndex ? '#FF007F' : muted,
+              font: (ctx) => ({ size: 10, weight: ctx.index === selIndex ? '700' : '400' })
+            },
+            grid: { display: false }
+          },
+          y: { ticks: { color: muted, font: { size: 10 }, callback: v => isPct ? v + '%' : v }, grid: { color: grid } }
+        }
+      }
+    });
+  }
+
+  trendCharts.sessions = lineChart('trend_sessions', series.sessions, '#397CC0', false);
+  trendCharts.leads = lineChart('trend_leads', series.leads, '#00B7BD', false);
+  trendCharts.bookings = lineChart('trend_bookings', series.bookings, '#055755', false);
+  trendCharts.winrate = lineChart('trend_winrate', series.winrate, '#FF007F', true);
+}
+
+function renderAll() {
+  renderTrend();
+  renderTabs();
+  const report = reports.find(r => r.id === selectedId) || null;
+  renderDashboard(report);
+}
+
+// ---------- Add report modal ----------
+const overlay = document.getElementById('modalOverlay');
+let advancedMode = false;
+let editingId = null;
+
+function fillList(containerId, items, fields) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  if (items && items.length) {
+    items.forEach(item => dynRow(container, fields, item));
+  } else {
+    dynRow(container, fields, null);
+  }
+}
+
+function openEditModal(report) {
+  editingId = report.id;
+  document.getElementById('modalTitle').textContent = 'Edit weekly report';
+  document.getElementById('saveReportBtn').textContent = 'Save changes';
+
+  document.getElementById('f_label').value = report.label || '';
+  document.getElementById('f_date').value = report.date || '';
+  document.getElementById('f_insights').value = (report.insights || []).join('\n');
+  document.getElementById('f_notes').value = (report.notes || []).join('\n');
+  document.getElementById('f_json').value = JSON.stringify(report, null, 2);
+
+  fillList('kpiList', report.kpis, [{ key: 'label', placeholder: 'Label' }, { key: 'value', placeholder: 'Value' }, { key: 'wow', placeholder: 'WoW %' }, { key: 'yoy', placeholder: 'YoY %' }]);
+  fillList('pipelineList', report.pipeline, [{ key: 'stage', placeholder: 'Stage' }, { key: 'count', placeholder: 'Count' }]);
+  fillList('channelList', report.channels, [{ key: 'name', placeholder: 'Channel' }, { key: 'opportunities', placeholder: 'Opportunities' }, { key: 'cvr', placeholder: 'CVR %' }]);
+  fillList('cityList', report.cities, [{ key: 'name', placeholder: 'City' }, { key: 'pct', placeholder: '% demand' }]);
+  fillList('propertyList', report.properties, [{ key: 'name', placeholder: 'Property name' }, { key: 'active', placeholder: 'Active pipeline' }, { key: 'won', placeholder: 'Closed Won' }, { key: 'lost', placeholder: 'Closed Lost' }]);
+  fillList('trafficList', report.traffic, [{ key: 'name', placeholder: 'Traffic channel' }, { key: 'wow', placeholder: 'WoW %' }]);
+
+  advancedMode = false;
+  document.getElementById('simpleMode').style.display = 'block';
+  document.getElementById('advancedMode').style.display = 'none';
+  document.getElementById('toggleAdvanced').textContent = 'Advanced mode (paste JSON) →';
+  overlay.classList.add('open');
+}
+
+function dynRow(container, fields, values) {
+  const row = document.createElement('div');
+  row.className = 'dyn-row';
+  fields.forEach(f => {
+    const input = document.createElement('input');
+    input.placeholder = f.placeholder;
+    input.dataset.field = f.key;
+    input.value = values ? (values[f.key] ?? '') : '';
+    row.appendChild(input);
+  });
+  const del = document.createElement('button');
+  del.textContent = '✕';
+  del.type = 'button';
+  del.addEventListener('click', () => row.remove());
+  row.appendChild(del);
+  container.appendChild(row);
+}
+
+document.querySelectorAll('[data-add]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const type = btn.dataset.add;
+    const map = {
+      kpi: ['kpiList', [{ key: 'label', placeholder: 'Label (e.g. Bookings)' }, { key: 'value', placeholder: 'Value (e.g. 300)' }, { key: 'wow', placeholder: 'WoW %' }, { key: 'yoy', placeholder: 'YoY %' }]],
+      pipeline: ['pipelineList', [{ key: 'stage', placeholder: 'Stage' }, { key: 'count', placeholder: 'Count' }]],
+      channel: ['channelList', [{ key: 'name', placeholder: 'Channel' }, { key: 'opportunities', placeholder: 'Opportunities' }, { key: 'cvr', placeholder: 'CVR %' }]],
+      city: ['cityList', [{ key: 'name', placeholder: 'City' }, { key: 'pct', placeholder: '% demand' }]],
+      property: ['propertyList', [{ key: 'name', placeholder: 'Property name' }, { key: 'active', placeholder: 'Active pipeline' }, { key: 'won', placeholder: 'Closed Won' }, { key: 'lost', placeholder: 'Closed Lost' }]],
+      traffic: ['trafficList', [{ key: 'name', placeholder: 'Traffic channel' }, { key: 'wow', placeholder: 'WoW %' }]]
+    };
+    const [containerId, fields] = map[type];
+    dynRow(document.getElementById(containerId), fields, null);
+  });
+});
+
+function resetForm() {
+  ['kpiList', 'pipelineList', 'channelList', 'cityList', 'propertyList', 'trafficList'].forEach(id => document.getElementById(id).innerHTML = '');
+  document.getElementById('f_label').value = '';
+  document.getElementById('f_date').value = '';
+  document.getElementById('f_insights').value = '';
+  document.getElementById('f_notes').value = '';
+  document.getElementById('f_json').value = '';
+  // pre-add a few empty rows for convenience
+  dynRow(document.getElementById('kpiList'), [{ key: 'label', placeholder: 'Label' }, { key: 'value', placeholder: 'Value' }, { key: 'wow', placeholder: 'WoW %' }, { key: 'yoy', placeholder: 'YoY %' }], null);
+  dynRow(document.getElementById('pipelineList'), [{ key: 'stage', placeholder: 'Stage' }, { key: 'count', placeholder: 'Count' }], null);
+  dynRow(document.getElementById('channelList'), [{ key: 'name', placeholder: 'Channel' }, { key: 'opportunities', placeholder: 'Opportunities' }, { key: 'cvr', placeholder: 'CVR %' }], null);
+  dynRow(document.getElementById('cityList'), [{ key: 'name', placeholder: 'City' }, { key: 'pct', placeholder: '% demand' }], null);
+  dynRow(document.getElementById('propertyList'), [{ key: 'name', placeholder: 'Property name' }, { key: 'active', placeholder: 'Active pipeline' }, { key: 'won', placeholder: 'Closed Won' }, { key: 'lost', placeholder: 'Closed Lost' }], null);
+  dynRow(document.getElementById('trafficList'), [{ key: 'name', placeholder: 'Traffic channel' }, { key: 'wow', placeholder: 'WoW %' }], null);
+}
+
+document.getElementById('addReportBtn').addEventListener('click', () => {
+  resetForm();
+  editingId = null;
+  document.getElementById('modalTitle').textContent = 'New weekly report';
+  document.getElementById('saveReportBtn').textContent = 'Save report';
+  advancedMode = false;
+  document.getElementById('simpleMode').style.display = 'block';
+  document.getElementById('advancedMode').style.display = 'none';
+  document.getElementById('toggleAdvanced').textContent = 'Advanced mode (paste JSON) →';
+  overlay.classList.add('open');
+});
+document.getElementById('cancelBtn').addEventListener('click', () => { overlay.classList.remove('open'); editingId = null; });
+document.getElementById('toggleAdvanced').addEventListener('click', () => {
+  advancedMode = !advancedMode;
+  document.getElementById('simpleMode').style.display = advancedMode ? 'none' : 'block';
+  document.getElementById('advancedMode').style.display = advancedMode ? 'block' : 'none';
+  document.getElementById('toggleAdvanced').textContent = advancedMode ? '← Simple mode (form)' : 'Advanced mode (paste JSON) →';
+});
+
+function readDynRows(containerId, keys) {
+  const rows = document.querySelectorAll(`#${containerId} .dyn-row`);
+  const out = [];
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const obj = {};
+    let hasValue = false;
+    inputs.forEach((inp, i) => {
+      const key = keys[i];
+      let val = inp.value.trim();
+      if (val !== '') hasValue = true;
+      if (key === 'count' || key === 'opportunities' || key === 'wow' || key === 'yoy' || key === 'cvr' || key === 'pct' || key === 'active' || key === 'won' || key === 'lost') {
+        obj[key] = val === '' ? null : Number(val);
+      } else {
+        obj[key] = val;
+      }
+    });
+    if (hasValue) out.push(obj);
+  });
+  return out;
+}
+
+document.getElementById('saveReportBtn').addEventListener('click', async () => {
+  let report;
+  if (advancedMode) {
+    try {
+      report = JSON.parse(document.getElementById('f_json').value);
+    } catch (e) {
+      alert('The JSON is not valid. Please check the format.');
+      return;
+    }
+    if (editingId) report.id = editingId;
+    else if (!report.id) report.id = 'report-' + Date.now();
+  } else {
+    const label = document.getElementById('f_label').value.trim();
+    const date = document.getElementById('f_date').value;
+    if (!label || !date) { alert('Please fill in at least the week label and the date.'); return; }
+    report = {
+      id: editingId || ('report-' + Date.now()),
+      label, date,
+      kpis: readDynRows('kpiList', ['label', 'value', 'wow', 'yoy']),
+      pipeline: readDynRows('pipelineList', ['stage', 'count']),
+      channels: readDynRows('channelList', ['name', 'opportunities', 'cvr']),
+      cities: readDynRows('cityList', ['name', 'pct']),
+      properties: readDynRows('propertyList', ['name', 'active', 'won', 'lost']),
+      traffic: readDynRows('trafficList', ['name', 'wow']),
+      insights: document.getElementById('f_insights').value.split('\n').map(s => s.trim()).filter(Boolean),
+      notes: document.getElementById('f_notes').value.split('\n').map(s => s.trim()).filter(Boolean)
+    };
+  }
+
+  // Preserve the version number when editing a report we manage via seed data,
+  // so the versioned migration on next load doesn't overwrite this edit.
+  if (editingId) {
+    const original = reports.find(r => r.id === editingId);
+    if (original && original.version !== undefined && report.version === undefined) {
+      report.version = original.version;
+    }
+  }
+
+  try {
+    await saveReport(report);
+    overlay.classList.remove('open');
+    reports = await loadReports();
+    selectedId = report.id;
+    editingId = null;
+    renderAll();
+  } catch (e) {
+    alert('Could not save the report. Please try again.');
+    console.error(e);
+  }
+});
+
+// ---------- Export helper modal (fallback when downloads / print are blocked by a sandboxed preview) ----------
+function openHelperModal(opts) {
+  document.getElementById('helperModalTitle').textContent = opts.title;
+  document.getElementById('helperModalText').textContent = opts.text;
+  const extra = document.getElementById('helperModalExtra');
+  extra.innerHTML = '';
+
+  if (opts.textareaValue !== undefined) {
+    const ta = document.createElement('textarea');
+    ta.value = opts.textareaValue;
+    ta.readOnly = true;
+    ta.style.width = '100%';
+    ta.style.minHeight = '220px';
+    ta.style.fontFamily = 'monospace';
+    ta.style.fontSize = '12px';
+    ta.style.border = '1px solid var(--scape-mist)';
+    ta.style.borderRadius = '7px';
+    ta.style.padding = '8px';
+    extra.appendChild(ta);
+
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'btn secondary';
+    copyBtn.style.marginTop = '10px';
+    copyBtn.textContent = 'Copy to clipboard';
+    copyBtn.addEventListener('click', () => {
+      ta.focus();
+      ta.select();
+      let copied = false;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(ta.value);
+          copied = true;
+        }
+      } catch (e) { /* fall through to execCommand */ }
+      if (!copied) {
+        try { document.execCommand('copy'); copied = true; } catch (e) { /* ignore */ }
+      }
+      copyBtn.textContent = copied ? 'Copied!' : 'Select all + Ctrl/Cmd+C';
+      setTimeout(() => { copyBtn.textContent = 'Copy to clipboard'; }, 1800);
+    });
+    extra.appendChild(copyBtn);
+  }
+
+  const actionBtn = document.getElementById('helperModalActionBtn');
+  if (opts.actionLabel && opts.actionFn) {
+    actionBtn.style.display = 'inline-block';
+    actionBtn.textContent = opts.actionLabel;
+    actionBtn.onclick = opts.actionFn;
+  } else {
+    actionBtn.style.display = 'none';
+  }
+  document.getElementById('helperModalOverlay').classList.add('open');
+}
+document.getElementById('helperModalCloseBtn').addEventListener('click', () => {
+  document.getElementById('helperModalOverlay').classList.remove('open');
+});
+
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const jsonStr = JSON.stringify(reports, null, 2);
+  let downloaded = false;
+  try {
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'weekly_reports_export.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    downloaded = true;
+  } catch (e) {
+    console.error('Automatic download failed, showing manual export instead.', e);
+  }
+
+  openHelperModal({
+    title: 'Export JSON',
+    text: downloaded
+      ? 'Your download should have started. If you don\'t see a file appear (some previews block automatic downloads), copy the text below and save it yourself as a .json file.'
+      : 'This preview blocked the automatic download. Copy the text below and save it as a .json file.',
+    textareaValue: jsonStr
+  });
+});
+
+document.getElementById('exportPdfBtn').addEventListener('click', () => {
+  const inIframe = window.self !== window.top;
+  if (!inIframe) {
+    try { window.print(); return; } catch (e) { console.error('Print failed', e); }
+  }
+
+  openHelperModal({
+    title: 'Export PDF',
+    text: 'This preview panel blocks pop-ups and the print dialog, so PDF export can\'t run from inside it. Download this HTML file using the file card / download icon above the chat, then open the downloaded file directly in Chrome, Edge, or Safari. Once it\'s open in a normal browser tab, press Ctrl+P (Cmd+P on Mac) and choose "Save as PDF" — printing works normally outside this preview.'
+  });
+});
+
+// ---------- Init ----------
+(async function init() {
+  reports = await loadReports();
+  selectedId = reports.length ? reports[reports.length - 1].id : null;
+  renderAll();
+})();
+</script>
+</body>
+</html>
