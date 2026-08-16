@@ -80,7 +80,7 @@ function TrendMini({ title, color, isPct, data, selectedShort }) {
 export function TrendSection({ reports, selectedLabel }) {
   if (!reports || reports.length < 2) return null;
   const series = buildTrendSeries(reports);
-  const points = reports.map((r) => ({ label: r.label, shortLabel: r.label.split(' ')[0] }));
+  const points = reports.map((r) => ({ label: r.label, shortLabel: r.label.split(' ')[0].slice(0, 3) }));
   const selectedShort = points.find((p) => p.label === selectedLabel)?.shortLabel;
 
   return (

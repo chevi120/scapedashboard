@@ -1,22 +1,23 @@
-export function Tabs({ reports, selectedId, onSelect, onEdit, onDelete }) {
+import { groupReportsByMonth, monthLabel } from '../lib/monthly.js';
+
+function Tab({ report, selectedId, onSelect, onEdit, onDelete, readOnly }) {
   return (
-    <div className="tabs">
-      {reports.map((r) => (
-        <div
-          key={r.id}
-          className={`tab ${r.id === selectedId ? 'active' : ''}`}
-          onClick={() => onSelect(r.id)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === 'Enter' && onSelect(r.id)}
-        >
-          <span>{r.label}</span>
+    <div
+      className={`tab ${report.id === selectedId ? 'active' : ''}`}
+      onClick={() => onSelect(report.id)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && onSelect(report.id)}
+    >
+      <span>{report.label}</span>
+      {!readOnly && (
+        <>
           <span
             className="icon-btn edit"
             title="Edit report"
             onClick={(e) => {
               e.stopPropagation();
-              onEdit(r);
+              onEdit(report);
             }}
           >
             ✎
@@ -26,11 +27,38 @@ export function Tabs({ reports, selectedId, onSelect, onEdit, onDelete }) {
             title="Delete report"
             onClick={(e) => {
               e.stopPropagation();
-              if (window.confirm(`Delete report "${r.label}"? This cannot be undone.`)) onDelete(r.id);
+              if (window.confirm(`Delete report "${report.label}"? This cannot be undone.`)) onDelete(report.id);
             }}
           >
             ✕
           </span>
+        </>
+      )}
+    </div>
+  );
+}
+
+export function Tabs({ reports, selectedId, onSelect, onEdit, onDelete, grouped, readOnly }) {
+  const rows = grouped ? groupReportsByMonth(reports) : [{ key: null, weeks: reports }];
+
+  return (
+    <div className="tabs-wrap">
+      {rows.map(({ key, weeks }) => (
+        <div className="tab-row" key={key ?? 'flat'}>
+          {key && <span className="tab-row-label">{monthLabel(weeks[0].date)}</span>}
+          <div className="tab-row-items">
+            {weeks.map((r) => (
+              <Tab
+                key={r.id}
+                report={r}
+                selectedId={selectedId}
+                onSelect={onSelect}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                readOnly={readOnly}
+              />
+            ))}
+          </div>
         </div>
       ))}
     </div>

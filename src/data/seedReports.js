@@ -50,7 +50,7 @@ export function seedReports() {
     },
     {
       id: 'w30-2026',
-      version: 1,
+      version: 2,
       label: 'W30 (20–26 Jul 2026)',
       date: '2026-07-20',
       kpis: [
@@ -87,8 +87,8 @@ export function seedReports() {
         { name: 'City Guide — Brisbane', opportunities: 6, cvr: 0.0 },
       ],
       cities: [
-        { name: 'Sydney (active pipeline)', pct: 37.3 },
-        { name: 'Melbourne (active pipeline)', pct: 36.5 },
+        { name: 'Sydney', pct: 37.3 },
+        { name: 'Melbourne', pct: 36.5 },
       ],
       traffic: [
         { name: 'Email', wow: 49.23 },

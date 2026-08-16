@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Header } from './components/Header.jsx';
 import { Tabs } from './components/Tabs.jsx';
+import { ViewToggle } from './components/ViewToggle.jsx';
 import { TrendSection } from './components/TrendSection.jsx';
 import { MetricGrid } from './components/MetricGrid.jsx';
 import { PipelineChart } from './components/PipelineChart.jsx';
@@ -12,6 +13,7 @@ import { InsightsCard } from './components/InsightsCard.jsx';
 import { NotesCard } from './components/NotesCard.jsx';
 import { ReportModal } from './components/ReportModal.jsx';
 import { useReports } from './hooks/useReports.js';
+import { buildMonthlyReports } from './lib/monthly.js';
 
 function exportJson(reports) {
   const blob = new Blob([JSON.stringify(reports, null, 2)], { type: 'application/json' });
@@ -29,6 +31,18 @@ export default function App() {
   const { reports, selectedId, setSelectedId, selectedReport, saveReport, deleteReport } = useReports();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingReport, setEditingReport] = useState(null);
+  const [viewMode, setViewMode] = useState('weekly');
+  const [selectedMonthId, setSelectedMonthId] = useState(null);
+
+  const monthlyReports = useMemo(() => buildMonthlyReports(reports), [reports]);
+
+  const isWeekly = viewMode === 'weekly';
+  const effectiveMonthId = selectedMonthId || monthlyReports[monthlyReports.length - 1]?.id || null;
+  const displayReports = isWeekly ? reports : monthlyReports;
+  const displaySelectedId = isWeekly ? selectedId : effectiveMonthId;
+  const displaySelectedReport = isWeekly
+    ? selectedReport
+    : monthlyReports.find((m) => m.id === displaySelectedId) || null;
 
   const openNew = () => {
     setEditingReport(null);
@@ -47,39 +61,43 @@ export default function App() {
   return (
     <div className="app">
       <Header
-        rangeLabel={selectedReport ? selectedReport.label : 'No reports yet'}
+        rangeLabel={displaySelectedReport ? displaySelectedReport.label : 'No reports yet'}
         onExportJson={() => exportJson(reports)}
         onExportPdf={() => window.print()}
         onNewReport={openNew}
       />
 
-      <TrendSection reports={reports} selectedLabel={selectedReport?.label} />
+      <TrendSection reports={displayReports} selectedLabel={displaySelectedReport?.label} />
+
+      <ViewToggle mode={viewMode} onChange={setViewMode} />
 
       <Tabs
-        reports={reports}
-        selectedId={selectedId}
-        onSelect={setSelectedId}
+        reports={displayReports}
+        selectedId={displaySelectedId}
+        onSelect={isWeekly ? setSelectedId : setSelectedMonthId}
         onEdit={openEdit}
         onDelete={deleteReport}
+        grouped={isWeekly}
+        readOnly={!isWeekly}
       />
 
-      {!selectedReport ? (
+      {!displaySelectedReport ? (
         <div className="empty-state">No reports saved yet. Use "+ New weekly report" to add the first one.</div>
       ) : (
         <>
-          <MetricGrid kpis={selectedReport.kpis} />
+          <MetricGrid kpis={displaySelectedReport.kpis} />
 
           <div className="grid-2">
-            {selectedReport.pipeline?.length > 0 && <PipelineChart pipeline={selectedReport.pipeline} />}
-            {selectedReport.cities?.length > 0 && <CityChart cities={selectedReport.cities} />}
+            {displaySelectedReport.pipeline?.length > 0 && <PipelineChart pipeline={displaySelectedReport.pipeline} />}
+            {displaySelectedReport.cities?.length > 0 && <CityChart cities={displaySelectedReport.cities} />}
           </div>
           <div style={{ height: 24 }} />
 
-          {selectedReport.channels?.length > 0 && <ChannelChart channels={selectedReport.channels} />}
-          {selectedReport.properties?.length > 0 && <PropertiesTable properties={selectedReport.properties} />}
-          {selectedReport.traffic?.length > 0 && <TrafficChart traffic={selectedReport.traffic} />}
-          {selectedReport.insights?.length > 0 && <InsightsCard insights={selectedReport.insights} />}
-          {selectedReport.notes?.length > 0 && <NotesCard notes={selectedReport.notes} />}
+          {displaySelectedReport.channels?.length > 0 && <ChannelChart channels={displaySelectedReport.channels} />}
+          {displaySelectedReport.properties?.length > 0 && <PropertiesTable properties={displaySelectedReport.properties} />}
+          {displaySelectedReport.traffic?.length > 0 && <TrafficChart traffic={displaySelectedReport.traffic} />}
+          {displaySelectedReport.insights?.length > 0 && <InsightsCard insights={displaySelectedReport.insights} />}
+          {displaySelectedReport.notes?.length > 0 && <NotesCard notes={displaySelectedReport.notes} />}
         </>
       )}
 
