@@ -54,6 +54,7 @@ function TrendMini({ title, color, isPct, data, selectedShort }) {
               stroke={color}
               strokeWidth={2}
               dot={(props) => {
+                if (props.payload.value === null || props.payload.value === undefined) return null;
                 const isSelected = props.payload.shortLabel === selectedShort;
                 return (
                   <circle
