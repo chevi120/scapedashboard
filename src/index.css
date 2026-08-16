@@ -125,12 +125,6 @@ body {
   margin: 0;
 }
 
-.app-header .shared-note {
-  font-size: 13px;
-  color: var(--ink-muted);
-  margin: 4px 0 0;
-}
-
 .header-actions {
   display: flex;
   gap: 8px;
@@ -139,7 +133,7 @@ body {
 
 /* ---------- Buttons ---------- */
 .btn {
-  font-family: inherit;
+  font-family: 'GT Pressura Pro', 'Bariol', sans-serif;
   font-weight: 700;
   font-size: 13px;
   border-radius: 9px;
@@ -295,7 +289,8 @@ body {
 
 /* ---------- Sections & cards ---------- */
 section { margin-bottom: 32px; }
-section > h2 {
+section > h2,
+.trend-section > h2 {
   font-family: 'GT Pressura Pro', 'Bariol', sans-serif;
   font-weight: 700;
   font-size: 14.5px;
@@ -382,6 +377,7 @@ section > h2 {
   padding: 12px;
 }
 .trend-box .trend-title {
+  font-family: 'GT Pressura Pro', 'Bariol', sans-serif;
   font-size: 11.5px; font-weight: 700; color: var(--ink-secondary);
   text-transform: uppercase; letter-spacing: 0.03em; margin: 0 0 6px;
 }

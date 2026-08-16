@@ -5,7 +5,6 @@ export function Header({ rangeLabel, onExportJson, onExportPdf, onNewReport }) {
         <p className="eyebrow">Scape · Leasing &amp; Marketing</p>
         <h1>Weekly Performance Dashboard</h1>
         <p className="range-label">{rangeLabel}</p>
-        <p className="shared-note">Shared with the team · reports are saved on this device</p>
       </div>
       <div className="header-actions">
         <button className="btn btn-secondary" onClick={onExportJson}>Export JSON</button>
