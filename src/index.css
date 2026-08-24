@@ -330,6 +330,26 @@ section > h2,
 .card li:last-child { margin-bottom: 0; }
 .card.warn { border-left: 4px solid var(--status-warning-fill); }
 
+.card-meta { font-size: 12.5px; color: var(--ink-secondary); margin: 0 0 16px; line-height: 1.5; }
+.card-subhead {
+  font-size: 11.5px; font-weight: 700; color: var(--ink-secondary);
+  text-transform: uppercase; letter-spacing: 0.03em; margin: 18px 0 8px;
+}
+.card-subhead:first-of-type { margin-top: 0; }
+
+.mini-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+.mini-stat {
+  background: var(--surface-alt); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px;
+}
+.mini-stat .label {
+  font-size: 11px; font-weight: 700; color: var(--ink-secondary);
+  text-transform: uppercase; letter-spacing: 0.03em; margin: 0 0 4px;
+}
+.mini-stat .value {
+  font-size: 18px; font-weight: 700; color: var(--ink); margin: 0; font-variant-numeric: tabular-nums;
+}
+.mini-stat .sub { font-size: 11.5px; color: var(--ink-muted); margin: 3px 0 0; }
+
 /* legend chips used under ordinal/status charts */
 .chart-legend {
   display: flex;
@@ -348,6 +368,7 @@ section > h2,
 /* ---------- Properties table ---------- */
 .table-scroll { overflow-x: auto; }
 .ptable { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 480px; }
+.ptable.compact { min-width: 0; }
 .ptable th, .ptable td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); }
 .ptable th {
   color: var(--ink-secondary); font-weight: 700; font-size: 12px;

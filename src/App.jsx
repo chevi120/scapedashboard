@@ -9,6 +9,8 @@ import { CityChart } from './components/CityChart.jsx';
 import { ChannelChart } from './components/ChannelChart.jsx';
 import { PropertiesTable } from './components/PropertiesTable.jsx';
 import { TrafficChart } from './components/TrafficChart.jsx';
+import { EmailCampaignCard } from './components/EmailCampaignCard.jsx';
+import { QuickWebReportCard } from './components/QuickWebReportCard.jsx';
 import { InsightsCard } from './components/InsightsCard.jsx';
 import { NotesCard } from './components/NotesCard.jsx';
 import { ReportModal } from './components/ReportModal.jsx';
@@ -96,6 +98,8 @@ export default function App() {
           {displaySelectedReport.channels?.length > 0 && <ChannelChart channels={displaySelectedReport.channels} />}
           {displaySelectedReport.properties?.length > 0 && <PropertiesTable properties={displaySelectedReport.properties} />}
           {displaySelectedReport.traffic?.length > 0 && <TrafficChart traffic={displaySelectedReport.traffic} />}
+          <EmailCampaignCard campaign={displaySelectedReport.emailCampaign} />
+          <QuickWebReportCard report={displaySelectedReport.quickWebReport} />
           {displaySelectedReport.insights?.length > 0 && <InsightsCard insights={displaySelectedReport.insights} />}
           {displaySelectedReport.notes?.length > 0 && <NotesCard notes={displaySelectedReport.notes} />}
         </>
