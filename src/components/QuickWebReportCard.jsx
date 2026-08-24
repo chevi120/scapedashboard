@@ -1,5 +1,7 @@
 import { StatMini } from './StatMini.jsx';
-import { formatDelta } from '../lib/format.js';
+import { CountBarChart } from './CountBarChart.jsx';
+import { WowBarChart } from './WowBarChart.jsx';
+import { COLORS } from '../lib/colors.js';
 
 export function QuickWebReportCard({ report }) {
   if (!report) return null;
@@ -21,75 +23,20 @@ export function QuickWebReportCard({ report }) {
           <StatMini label="Total leads" value={report.totalLeads.toLocaleString('en-AU')} delta={report.leadsWow} />
         </div>
 
-        <p className="card-subhead">Traffic by channel</p>
-        <div className="table-scroll">
-          <table className="ptable">
-            <thead>
-              <tr>
-                <th>Channel</th>
-                <th style={{ textAlign: 'right' }}>Sessions</th>
-                <th style={{ textAlign: 'right' }}>WoW %</th>
-              </tr>
-            </thead>
-            <tbody>
-              {report.channels.map((c) => (
-                <tr key={c.name}>
-                  <td>{c.name}</td>
-                  <td className="num">{c.sessions.toLocaleString('en-AU')}</td>
-                  <td className={`num ${c.wow >= 0 ? 'won' : 'lost'}`}>{formatDelta(c.wow)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <p className="card-subhead">Traffic by channel (WoW %)</p>
+        <WowBarChart
+          data={report.channels}
+          height={Math.max(160, report.channels.length * 34)}
+          tooltipSuffix={(p) => (p.sessions ? ` · ${p.sessions.toLocaleString('en-AU')} sessions` : '')}
+        />
 
         <p className="card-subhead">Lead origin</p>
-        <div className="table-scroll">
-          <table className="ptable">
-            <thead>
-              <tr>
-                <th>Origin</th>
-                <th style={{ textAlign: 'right' }}>Count</th>
-                <th style={{ textAlign: 'right' }}>WoW %</th>
-              </tr>
-            </thead>
-            <tbody>
-              {report.leadOrigins.map((o) => (
-                <tr key={o.name}>
-                  <td>{o.name}</td>
-                  <td className="num">{o.count}</td>
-                  <td className={`num ${o.wow == null ? 'dash' : o.wow >= 0 ? 'won' : 'lost'}`}>
-                    {o.wow == null ? '—' : formatDelta(o.wow)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <CountBarChart data={report.leadOrigins} color={COLORS.magnitudeTeal} labelWidth={130} />
 
         {report.topProperties?.length > 0 && (
           <>
             <p className="card-subhead">Top properties — page views</p>
-            <div className="table-scroll">
-              <table className="ptable">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Page</th>
-                    <th style={{ textAlign: 'right' }}>Views</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {report.topProperties.map((p) => (
-                    <tr key={p.rank}>
-                      <td className="num">{p.rank}</td>
-                      <td>{p.path}</td>
-                      <td className="num">{p.views.toLocaleString('en-AU')}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <CountBarChart data={report.topProperties} nameKey="path" valueKey="views" color={COLORS.magnitudeBlue} labelWidth={230} />
           </>
         )}
       </div>

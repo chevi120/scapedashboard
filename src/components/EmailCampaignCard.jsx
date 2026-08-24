@@ -1,4 +1,7 @@
 import { StatMini } from './StatMini.jsx';
+import { EmailFunnelChart } from './EmailFunnelChart.jsx';
+import { CountBarChart } from './CountBarChart.jsx';
+import { COLORS } from '../lib/colors.js';
 
 export function EmailCampaignCard({ campaign }) {
   if (!campaign) return null;
@@ -35,32 +38,22 @@ export function EmailCampaignCard({ campaign }) {
           />
         </div>
 
+        <p className="card-subhead">Engagement funnel</p>
+        <EmailFunnelChart
+          delivered={campaign.delivered}
+          uniqueOpens={campaign.uniqueOpens}
+          uniqueClicks={campaign.uniqueClicks}
+          unsubscribes={campaign.unsubscribes}
+        />
+
         <div className="grid-2">
           <div>
             <p className="card-subhead">Not sent ({campaign.notSent} of {campaign.sent.toLocaleString('en-AU')})</p>
-            <table className="ptable compact">
-              <tbody>
-                {campaign.notSentBreakdown.map((r) => (
-                  <tr key={r.label}>
-                    <td>{r.label}</td>
-                    <td className="num">{r.count}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <CountBarChart data={campaign.notSentBreakdown} nameKey="label" color={COLORS.statusWarningFill} labelWidth={110} />
           </div>
           <div>
             <p className="card-subhead">Bounces ({campaign.bounces} total)</p>
-            <table className="ptable compact">
-              <tbody>
-                {campaign.bounceBreakdown.map((r) => (
-                  <tr key={r.label}>
-                    <td>{r.label}</td>
-                    <td className="num">{r.count}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <CountBarChart data={campaign.bounceBreakdown} nameKey="label" color={COLORS.statusCriticalFill} labelWidth={110} />
           </div>
         </div>
       </div>
