@@ -1,4 +1,4 @@
-// Seed weekly reports (W29-W33 2026), ported from the source weekly documents.
+// Seed weekly reports (W29-W34 2026), ported from the source weekly documents.
 export function seedReports() {
   return [
     {
@@ -365,6 +365,58 @@ export function seedReports() {
         'Agent Portal remains the largest source (216 opportunities) but still sits outside the Leads export/channel tagging; 97 opportunities also carry no Lead Origin Channel at all.',
         'Booking figures are sourced from StarRez and should not be reconciled directly against CRM Closed Won opportunities.',
         'Key priorities called out this week: improve CRM data quality (dedupe Duplicate/Junk records), review the website booking journey, address inactive Tentative Bookings, and re-establish a reliable weekly Leads export.',
+      ],
+    },
+    {
+      id: 'w34-2026',
+      version: 1,
+      label: 'W34 (17–23 Aug 2026)',
+      date: '2026-08-17',
+      kpis: [
+        { label: 'Website sessions', value: '28,361', wow: -4.8, yoy: -14.9 },
+        { label: 'Key events', value: '1,107', wow: 14.0, yoy: 139.6 },
+        { label: 'GA4-attributed revenue', value: '$304,021', wow: 12.3, yoy: 165.0 },
+        { label: 'Total leads', value: '648', wow: 11.1, yoy: -20.7 },
+        { label: 'Total bookings (Agent + Direct + Website)', value: '233', wow: -6.4, yoy: 50.3 },
+        { label: 'Web purchases', value: '18', wow: 20, yoy: null },
+      ],
+      // Pipeline/channel-CVR/city/property are intentionally omitted this week: the
+      // Opportunities export supplied was mis-scoped to W31 (27 Jul-2 Aug), not this
+      // week, so there is no genuine W34 CRM breakdown to chart — see notes.
+      pipeline: [],
+      channels: [],
+      cities: [],
+      properties: [],
+      traffic: [
+        { name: 'Organic Search', wow: -9.5 },
+        { name: 'Paid Search', wow: -8.7 },
+        { name: 'Direct', wow: -10.3 },
+        { name: 'Paid Social', wow: 6.3 },
+        { name: 'Referral', wow: 1.9 },
+        { name: 'Email', wow: 46.3 },
+        { name: 'Display', wow: -10.8 },
+        { name: 'Unassigned', wow: 19.9 },
+        { name: 'AI Assistant', wow: -4.8 },
+        { name: 'Organic Social', wow: -5.9 },
+        { name: 'Cross-network', wow: 428.6 },
+        { name: 'Other (Video/Shopping/Paid Other)', wow: -31.6 },
+      ],
+      insights: [
+        'Traffic fell on both comparisons but conversion quality rose sharply: sessions -4.8% WoW / -14.9% YoY, yet key events +14.0% WoW / +139.6% YoY and GA4-attributed revenue +12.3% WoW / +165.0% YoY — a genuinely different pattern from last week\'s "steady traffic, weakening funnel."',
+        'The 40% Discount Offer email (sent 17 Aug, Job ID 124282) plausibly drove this week\'s Email channel surge: a 40.9% open rate and 21.4% click-to-open rate, alongside GA4 Email sessions up 46.3% WoW / 333.5% YoY.',
+        'Leads grew for a second straight week (583 → 648, +11.1% WoW), but the YoY read depends heavily on Agent Portal: -39.3% on the raw comparison vs -20.7% once Agent Portal (251 leads, 23.5% of last year\'s comparable week) is stripped from last year\'s base, since it\'s entirely absent from this year\'s export — the same tagging gap flagged in prior cycles.',
+        'Agent still supplies roughly two-thirds of StarRez bookings (63.9%) despite easing back WoW (-11.8%), while every booking channel is up sharply YoY, led by Website (+140.0%) and Direct (+63.6%).',
+        'Referral sessions collapsed 85.1% YoY (1,309 vs 8,763) — likely a one-off campaign/partner spike in last year\'s comparable week rather than a genuine ongoing decline; worth a quick check with the channel owner.',
+      ],
+      notes: [
+        'DATA GAP: the Opportunities export supplied this cycle covers Created Date 27 Jul–2 Aug 2026 (W31), not 17–23 Aug 2026 (W34) — every CRM-derived figure (pipeline by stage, channel CVR, city/property breakdown, win rate, room types) would be three weeks stale, so those sections are omitted from this dashboard entry rather than shown under the wrong week. Recommend re-pulling the correct-period export before next cycle.',
+        'This is now a recurring pattern across recent cycles (wrong GA4 property two weeks ago, missing Leads channel, and now a mis-scoped Opportunities export) — worth a source-side fix rather than treating each as a one-off.',
+        'GAP: no landing-page/exit-rate GA4 export was supplied again this cycle — a standing, recurring gap.',
+        'No monthly (August) lead target was supplied, so pace-to-target can\'t be shown this cycle.',
+        'StarRez booking exports don\'t carry a semester/intake tag, so this week\'s 233 bookings can\'t be split Sem 1 vs Sem 2 directly; the closest available proxy is the semester mix in the (stale) W31 Opportunities file.',
+        'The W35 (24–30 Aug) range of 620–690 leads mentioned in the source report is a simple trend extrapolation from two comparable weeks, not a target-based forecast — indicative only.',
+        'Of the 2,633 subscribers delivered the 40% Discount Offer, 1,557 (59.1%) did not open it and 19 (0.72%) unsubscribed — worth watching the cumulative unsubscribe rate if discount-led sends become more frequent.',
+        'A separate quick web-report summary supplied alongside this week\'s data shows slightly different headline figures (sessions 28,273 vs 28,361 here; total leads +16% WoW vs +11.1% here) — likely a rounding/timing difference between exports; the detailed GA4/Leads report is used as the primary source for this dashboard entry.',
       ],
     },
   ];

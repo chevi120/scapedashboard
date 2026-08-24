@@ -40,16 +40,29 @@ export function TrafficChart({ traffic }) {
                 <LabelList
                   dataKey="wow"
                   content={({ x, y, width, height, value }) => {
+                    // Recharts anchors x at the zero baseline for every bar and signs the
+                    // width, so the bar's true far edge (away from zero) is x + width.
                     const positive = value >= 0;
+                    const farEdge = x + width;
+                    // A short bar has no room for an outside label without crowding the
+                    // axis (small bars) or the category labels (very large bars run past
+                    // the plot edge) - flip inside the fill once the bar is wide enough.
+                    const inside = Math.abs(width) > 46;
+                    const labelX = inside
+                      ? farEdge + (positive ? -6 : 6)
+                      : farEdge + (positive ? 6 : -6);
+                    const anchor = inside
+                      ? (positive ? 'end' : 'start')
+                      : (positive ? 'start' : 'end');
                     return (
                       <text
-                        x={positive ? x + width + 6 : x - 6}
+                        x={labelX}
                         y={y + height / 2}
                         dy={4}
-                        textAnchor={positive ? 'start' : 'end'}
+                        textAnchor={anchor}
                         fontSize={11}
                         fontWeight={700}
-                        fill={COLORS.ink}
+                        fill={inside ? '#ffffff' : COLORS.ink}
                       >
                         {positive ? '+' : ''}{value}%
                       </text>
