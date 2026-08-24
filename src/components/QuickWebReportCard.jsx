@@ -1,6 +1,5 @@
 import { StatMini } from './StatMini.jsx';
 import { CountBarChart } from './CountBarChart.jsx';
-import { WowBarChart } from './WowBarChart.jsx';
 import { COLORS } from '../lib/colors.js';
 
 export function QuickWebReportCard({ report }) {
@@ -22,13 +21,6 @@ export function QuickWebReportCard({ report }) {
           <StatMini label="Revenue" value={`$${report.revenue.toLocaleString('en-AU')}`} delta={report.revenueWow} />
           <StatMini label="Total leads" value={report.totalLeads.toLocaleString('en-AU')} delta={report.leadsWow} />
         </div>
-
-        <p className="card-subhead">Traffic by channel (WoW %)</p>
-        <WowBarChart
-          data={report.channels}
-          height={Math.max(160, report.channels.length * 34)}
-          tooltipSuffix={(p) => (p.sessions ? ` · ${p.sessions.toLocaleString('en-AU')} sessions` : '')}
-        />
 
         <p className="card-subhead">Lead origin</p>
         <CountBarChart data={report.leadOrigins} color={COLORS.magnitudeTeal} labelWidth={130} />
