@@ -1,4 +1,4 @@
-// Seed weekly reports (W29-W36 2026), ported from the source weekly documents.
+// Seed weekly reports (W29-W37 2026), ported from the source weekly documents.
 export function seedReports() {
   return [
     {
@@ -747,6 +747,86 @@ export function seedReports() {
           { rank: 10, path: '/melbourne/scape-melbourne-central/', views: 775 },
         ],
       },
+    },
+    {
+      id: 'w37-2026',
+      version: 1,
+      label: 'W37 (7–13 Sep 2026)',
+      date: '2026-09-07',
+      kpis: [
+        { label: 'Website sessions', value: '39,030', wow: 20.0, yoy: -15.2 },
+        { label: 'Active users', value: '27,177', wow: 14.0, yoy: -19.0 },
+        { label: 'Key events', value: '1,115', wow: 9.9, yoy: 133.3 },
+        { label: 'Total leads', value: '1,036', wow: 61.1, yoy: null },
+        { label: 'Opportunities created', value: '915', wow: 20.6, yoy: null },
+        { label: 'Closed Won (rooms secured)', value: '281', wow: null, yoy: null },
+        { label: 'Win rate (decided opportunities)', value: '62.3%', wow: null, yoy: null },
+      ],
+      pipeline: [
+        { stage: 'Discovery', count: 174 },
+        { stage: 'Closed Won', count: 281 },
+        { stage: 'Closed Lost', count: 170 },
+        { stage: 'Room Proposal', count: 124 },
+        { stage: 'Tentative Booking', count: 145 },
+        { stage: 'Waitlist', count: 21 },
+      ],
+      channels: [
+        { name: 'Agent Portal', opportunities: 312, cvr: 84.2 },
+        { name: 'No channel tagged', opportunities: 169, cvr: 81.5 },
+        { name: 'WhatsApp', opportunities: 110, cvr: 16.4 },
+        { name: 'Book a Tour', opportunities: 100, cvr: 13.8 },
+        { name: 'Waitlist Fully Booked', opportunities: 50, cvr: 26.7 },
+        { name: 'Waitlist Future Enquiry', opportunities: 30, cvr: 50.0 },
+        { name: 'Contact Us General', opportunities: 31, cvr: 0.0 },
+        { name: 'Webchat', opportunities: 38, cvr: 27.3 },
+        { name: 'City Guide — Sydney', opportunities: 20, cvr: 0.0 },
+        { name: 'WeCom', opportunities: 16, cvr: 100.0 },
+        { name: 'City Guide — Melbourne', opportunities: 11, cvr: 0.0 },
+        { name: 'City Guide — Brisbane', opportunities: 6, cvr: 25.0 },
+        { name: 'Summer Stays', opportunities: 5, cvr: 0.0 },
+      ],
+      cities: [
+        { name: 'Melbourne', pct: 13.1 },
+        { name: 'Sydney', pct: 12.3 },
+        { name: 'Brisbane', pct: 6.2 },
+        { name: 'Adelaide', pct: 1.9 },
+      ],
+      traffic: [
+        { name: 'Direct', wow: 77.3 },
+        { name: 'Other', wow: 40.8 },
+        { name: 'Organic Search', wow: 23.4 },
+        { name: 'Referral', wow: 5.4 },
+        { name: 'Paid Social', wow: -2.9 },
+        { name: 'Paid Search', wow: -8.8 },
+        { name: 'Organic Social', wow: -47.4 },
+      ],
+      properties: [],
+      propertyVolume: [
+        { name: 'Scape Carlton', opportunities: 37 },
+        { name: 'Scape Merivale', opportunities: 36 },
+        { name: 'Scape Swanston', opportunities: 30 },
+        { name: 'Scape Uni Square', opportunities: 30 },
+        { name: 'Scape Franklin', opportunities: 29 },
+        { name: 'Scape Melbourne Central', opportunities: 29 },
+        { name: 'Scape Darling House', opportunities: 27 },
+        { name: 'Scape Peel', opportunities: 26 },
+        { name: 'Scape Toowong', opportunities: 25 },
+        { name: 'Scape Darling Square', opportunities: 25 },
+      ],
+      insights: [
+        'Direct surged 77.3% WoW to 12,057 sessions, now the single largest channel and the primary driver of this week\'s overall session growth (+20.0% WoW); Direct is also up 45.9% YoY, the strongest channel in that comparison.',
+        'Key events are up 133.3% YoY (1,115 vs 478) with engagement rate up 5.3pp YoY — sessions are converting to high-quality visits far better than a year ago, despite total sessions being down 15.2% YoY.',
+        'Leads reached 1,036 (+61.1% WoW), but 35.7% of that is a one-off UNSW Term 3 campus event (370 leads); excluding it, underlying leads still grew a healthy +3.6% WoW to 666 — a genuine, if smaller, improvement.',
+        'Win rate jumped from 45.6% to 62.3% (+16.7pp WoW) while opportunity volume also grew 20.6% WoW to 915 — quality and quantity improved together, and 298 opportunities (32.6%) are in Discovery or Room Proposal, the largest active pipeline reported yet.',
+        'Agent Portal and directly-added opportunities (no channel recorded) convert at 82–84%, far above the 62.3% blanket win rate, while high-volume digital channels (WhatsApp 16.4%, Book a Tour 13.8%) remain the main lever for improving overall win rate.',
+        'Semester 1 2027 continues to lead both volume (56.0% of all opportunities) and wins (66.9% of Closed Won) over Semester 2 2026 (37.3% of opportunities, 29.5% of Closed Won).',
+      ],
+      notes: [
+        'DATA GAP: booking source data is not yet connected this cycle ("NO ACCESS TO DATA") — no Agent/Direct/Website booking split is available this week; the Total bookings KPI and Agent vs Direct chart are omitted rather than shown empty.',
+        'City of Interest is an optional field left blank on 66.4% of this week\'s opportunities (608 of 915) — the city chart above undercounts true demand; see "Opportunities by property" below for the closest available read on actual location interest.',
+        'YTD cumulative leads (1 Jan–13 Sep) are down 18.1% YoY (34,556 vs 42,190) on the same calendar window in both years; bookatour, waitlist and Agent Portal remain the largest sources in both years.',
+        'This week\'s report uses a new template with fewer traffic-channel categories than prior cycles (Email, Display, Unassigned, AI Assistant and Cross-network appear to be grouped into "Other" this time) — worth confirming with the analytics owner whether this is a permanent change before comparing WoW at the individual-channel level next cycle.',
+      ],
     },
   ];
 }

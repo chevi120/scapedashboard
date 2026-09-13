@@ -8,6 +8,7 @@ import { PipelineChart } from './components/PipelineChart.jsx';
 import { CityChart } from './components/CityChart.jsx';
 import { ChannelChart } from './components/ChannelChart.jsx';
 import { PropertiesTable } from './components/PropertiesTable.jsx';
+import { PropertyVolumeChart } from './components/PropertyVolumeChart.jsx';
 import { TrafficChart } from './components/TrafficChart.jsx';
 import { EmailCampaignCard } from './components/EmailCampaignCard.jsx';
 import { QuickWebReportCard } from './components/QuickWebReportCard.jsx';
@@ -97,6 +98,7 @@ export default function App() {
 
           {displaySelectedReport.channels?.length > 0 && <ChannelChart channels={displaySelectedReport.channels} />}
           {displaySelectedReport.properties?.length > 0 && <PropertiesTable properties={displaySelectedReport.properties} />}
+          <PropertyVolumeChart properties={displaySelectedReport.propertyVolume} />
           {displaySelectedReport.traffic?.length > 0 && <TrafficChart traffic={displaySelectedReport.traffic} />}
           <EmailCampaignCard campaign={displaySelectedReport.emailCampaign} />
           <QuickWebReportCard report={displaySelectedReport.quickWebReport} />
