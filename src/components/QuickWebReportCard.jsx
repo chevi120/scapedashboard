@@ -1,5 +1,6 @@
 import { StatMini } from './StatMini.jsx';
 import { CountBarChart } from './CountBarChart.jsx';
+import { SectionHeader } from './SectionHeader.jsx';
 import { COLORS } from '../lib/colors.js';
 
 export function QuickWebReportCard({ report }) {
@@ -7,7 +8,7 @@ export function QuickWebReportCard({ report }) {
 
   return (
     <section>
-      <h2>Quick web report ({report.periodLabel})</h2>
+      <SectionHeader eyebrow="Web report" title={`Quick web report (${report.periodLabel})`} />
       <div className="card warn">
         <p className="card-meta">
           A shorter, separately-supplied web-report summary (WoW vs {report.comparedTo}) — several figures here

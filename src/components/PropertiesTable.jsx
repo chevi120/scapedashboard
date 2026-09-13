@@ -1,3 +1,5 @@
+import { SectionHeader } from './SectionHeader.jsx';
+
 function Cell({ value, cls }) {
   if (value === null || value === undefined) return <td className="num dash">—</td>;
   return <td className={`num ${cls || ''}`}>{value}</td>;
@@ -6,7 +8,7 @@ function Cell({ value, cls }) {
 export function PropertiesTable({ properties }) {
   return (
     <section>
-      <h2>Top properties</h2>
+      <SectionHeader eyebrow="Properties" title="Top properties" />
       <div className="card table-scroll">
         <table className="ptable">
           <thead>

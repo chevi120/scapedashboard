@@ -5,6 +5,7 @@ import { ViewToggle } from './components/ViewToggle.jsx';
 import { TrendSection } from './components/TrendSection.jsx';
 import { MetricGrid } from './components/MetricGrid.jsx';
 import { PipelineChart } from './components/PipelineChart.jsx';
+import { WinRateGauge } from './components/WinRateGauge.jsx';
 import { CityChart } from './components/CityChart.jsx';
 import { ChannelChart } from './components/ChannelChart.jsx';
 import { PropertiesTable } from './components/PropertiesTable.jsx';
@@ -94,7 +95,12 @@ export default function App() {
             {displaySelectedReport.pipeline?.length > 0 && <PipelineChart pipeline={displaySelectedReport.pipeline} />}
             {displaySelectedReport.cities?.length > 0 && <CityChart cities={displaySelectedReport.cities} />}
           </div>
-          <div style={{ height: 24 }} />
+          {displaySelectedReport.pipeline?.length > 0 && (
+            <div style={{ marginBottom: 24 }}>
+              <WinRateGauge pipeline={displaySelectedReport.pipeline} />
+            </div>
+          )}
+          <div style={{ height: 8 }} />
 
           {displaySelectedReport.channels?.length > 0 && <ChannelChart channels={displaySelectedReport.channels} />}
           {displaySelectedReport.properties?.length > 0 && <PropertiesTable properties={displaySelectedReport.properties} />}

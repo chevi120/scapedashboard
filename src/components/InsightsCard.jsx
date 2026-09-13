@@ -1,13 +1,27 @@
+import { SectionHeader } from './SectionHeader.jsx';
+
 export function InsightsCard({ insights }) {
+  if (!insights?.length) return null;
+  const [headline, ...rest] = insights;
+
   return (
     <section>
-      <h2>Key insights</h2>
+      <SectionHeader eyebrow="Takeaways" title="Key insights" />
       <div className="card">
-        <ol>
-          {insights.map((text, i) => (
-            <li key={i}>{text}</li>
-          ))}
-        </ol>
+        <p className="callout-check">
+          <span className="check">✓</span>
+          {headline}
+        </p>
+        {rest.length > 0 && (
+          <ul className="insight-list">
+            {rest.map((text, i) => (
+              <li key={i}>
+                <span className="plus">+</span>
+                {text}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
   );

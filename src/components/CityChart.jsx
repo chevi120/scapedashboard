@@ -1,11 +1,12 @@
 import { Bar, BarChart, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { ChartTooltip } from './ChartTooltip.jsx';
+import { SectionHeader } from './SectionHeader.jsx';
 import { COLORS } from '../lib/colors.js';
 
 export function CityChart({ cities }) {
   return (
     <section style={{ marginBottom: 0 }}>
-      <h2>Demand by city</h2>
+      <SectionHeader eyebrow="Demand" title="Demand by city" />
       <div className="chart-card">
         <div className="chart-box">
           <ResponsiveContainer width="100%" height="100%">

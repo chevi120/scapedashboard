@@ -1,6 +1,7 @@
 import { StatMini } from './StatMini.jsx';
 import { EmailFunnelChart } from './EmailFunnelChart.jsx';
 import { CountBarChart } from './CountBarChart.jsx';
+import { SectionHeader } from './SectionHeader.jsx';
 import { COLORS } from '../lib/colors.js';
 
 export function EmailCampaignCard({ campaign }) {
@@ -8,7 +9,7 @@ export function EmailCampaignCard({ campaign }) {
 
   return (
     <section>
-      <h2>Email campaign — {campaign.name}</h2>
+      <SectionHeader eyebrow="Email" title={`Email campaign — ${campaign.name}`} />
       <div className="card">
         <p className="card-meta">
           Job ID {campaign.jobId} · Subject "{campaign.subject}" · Sent {campaign.sentAt} to {campaign.audience}

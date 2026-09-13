@@ -1,9 +1,10 @@
 import { WowBarChart } from './WowBarChart.jsx';
+import { SectionHeader } from './SectionHeader.jsx';
 
 export function TrafficChart({ traffic }) {
   return (
     <section>
-      <h2>Traffic by channel (WoW %)</h2>
+      <SectionHeader eyebrow="Traffic" title="Traffic by channel (WoW %)" />
       <div className="chart-card">
         <WowBarChart
           data={traffic}

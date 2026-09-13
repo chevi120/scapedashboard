@@ -1,4 +1,5 @@
 import { CountBarChart } from './CountBarChart.jsx';
+import { SectionHeader } from './SectionHeader.jsx';
 import { COLORS } from '../lib/colors.js';
 
 // Some weeks' property breakdown is a flat opportunity-volume ranking with no
@@ -9,7 +10,7 @@ export function PropertyVolumeChart({ properties }) {
 
   return (
     <section>
-      <h2>Opportunities by property</h2>
+      <SectionHeader eyebrow="Properties" title="Opportunities by property" />
       <div className="chart-card">
         <CountBarChart data={properties} valueKey="opportunities" color={COLORS.magnitudeBlue} labelWidth={190} />
       </div>

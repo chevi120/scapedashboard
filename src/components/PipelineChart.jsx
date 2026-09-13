@@ -1,5 +1,6 @@
 import { Bar, BarChart, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { ChartTooltip } from './ChartTooltip.jsx';
+import { SectionHeader } from './SectionHeader.jsx';
 import { COLORS, sortByStageOrder, stageColor } from '../lib/colors.js';
 
 const LEGEND = [
@@ -14,7 +15,7 @@ export function PipelineChart({ pipeline }) {
 
   return (
     <section style={{ marginBottom: 0 }}>
-      <h2>Pipeline by stage</h2>
+      <SectionHeader eyebrow="Pipeline" title="Pipeline by stage" />
       <div className="chart-card">
         <div className="chart-box">
           <ResponsiveContainer width="100%" height="100%">

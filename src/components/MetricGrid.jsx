@@ -1,11 +1,14 @@
-import { deltaTone, formatDelta } from '../lib/format.js';
+import { deltaTone } from '../lib/format.js';
 
 function DeltaChip({ value, tag }) {
-  const text = formatDelta(value);
-  if (!text) return null;
+  if (value === null || value === undefined || value === '') return null;
+  const num = Number(value);
+  if (Number.isNaN(num)) return null;
+  const tri = num > 0 ? '▲' : num < 0 ? '▼' : '●';
+  const sign = num > 0 ? '+' : '';
   return (
     <span className={`delta-chip ${deltaTone(value)}`}>
-      {text} <span className="tag">{tag}</span>
+      <span className="tri">{tri}</span> {sign}{num}% <span className="tag">{tag}</span>
     </span>
   );
 }
