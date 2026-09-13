@@ -241,10 +241,10 @@ export function seedReports() {
         { name: 'Commercial Enquiry', opportunities: 3, cvr: 0.0 },
       ],
       cities: [
-        { name: 'Sydney', pct: 31.8 },
-        { name: 'Melbourne', pct: 31.2 },
-        { name: 'Brisbane', pct: 18.1 },
-        { name: 'Adelaide', pct: 7.0 },
+        { name: 'Sydney', opportunities: 205, pct: 31.8 },
+        { name: 'Melbourne', opportunities: 201, pct: 31.2 },
+        { name: 'Brisbane', opportunities: 117, pct: 18.1 },
+        { name: 'Adelaide', opportunities: 45, pct: 7.0 },
       ],
       traffic: [
         { name: 'Display', sessions: 632, wow: 21.5 },
@@ -329,10 +329,10 @@ export function seedReports() {
         { name: 'City Guide — Melbourne', opportunities: 8, cvr: 0.0 },
       ],
       cities: [
-        { name: 'Melbourne', pct: 24.0 },
-        { name: 'Sydney', pct: 22.3 },
-        { name: 'Brisbane', pct: 20.4 },
-        { name: 'Adelaide', pct: 3.5 },
+        { name: 'Melbourne', opportunities: 152, pct: 24.0 },
+        { name: 'Sydney', opportunities: 141, pct: 22.3 },
+        { name: 'Brisbane', opportunities: 129, pct: 20.4 },
+        { name: 'Adelaide', opportunities: 22, pct: 3.5 },
       ],
       traffic: [
         { name: 'AI Assistant', sessions: 252, wow: 38.5 },
@@ -529,10 +529,10 @@ export function seedReports() {
         { name: 'WeCom — Rednote', opportunities: 5, cvr: 40.0 },
       ],
       cities: [
-        { name: 'Melbourne', pct: 32.9 },
-        { name: 'Sydney', pct: 27.1 },
-        { name: 'Brisbane', pct: 15.6 },
-        { name: 'Adelaide', pct: 6.9 },
+        { name: 'Melbourne', opportunities: 239, pct: 32.9 },
+        { name: 'Sydney', opportunities: 197, pct: 27.1 },
+        { name: 'Brisbane', opportunities: 113, pct: 15.6 },
+        { name: 'Adelaide', opportunities: 50, pct: 6.9 },
       ],
       traffic: [
         { name: 'Cross-network', sessions: 280, wow: 218.2 },
@@ -657,10 +657,10 @@ export function seedReports() {
         { name: 'City Guide — Brisbane', opportunities: 6, cvr: 0.0 },
       ],
       cities: [
-        { name: 'Melbourne', pct: 37.0 },
-        { name: 'Sydney', pct: 24.7 },
-        { name: 'Brisbane', pct: 12.0 },
-        { name: 'Adelaide', pct: 7.3 },
+        { name: 'Melbourne', opportunities: 280, pct: 37.0 },
+        { name: 'Sydney', opportunities: 187, pct: 24.7 },
+        { name: 'Brisbane', opportunities: 91, pct: 12.0 },
+        { name: 'Adelaide', opportunities: 55, pct: 7.3 },
       ],
       traffic: [
         { name: 'Organic Social', sessions: 331, wow: 94.7 },
@@ -786,10 +786,10 @@ export function seedReports() {
         { name: 'Summer Stays', opportunities: 5, cvr: 0.0 },
       ],
       cities: [
-        { name: 'Melbourne', pct: 13.1 },
-        { name: 'Sydney', pct: 12.3 },
-        { name: 'Brisbane', pct: 6.2 },
-        { name: 'Adelaide', pct: 1.9 },
+        { name: 'Melbourne', opportunities: 120, pct: 13.1 },
+        { name: 'Sydney', opportunities: 113, pct: 12.3 },
+        { name: 'Brisbane', opportunities: 57, pct: 6.2 },
+        { name: 'Adelaide', opportunities: 17, pct: 1.9 },
       ],
       traffic: [
         { name: 'Direct', sessions: 12057, wow: 77.3 },

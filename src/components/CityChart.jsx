@@ -22,7 +22,16 @@ export function CityChart({ cities }) {
                 tickLine={false}
                 tickFormatter={(v) => `${v}%`}
               />
-              <Tooltip cursor={{ fill: 'rgba(36,42,86,0.05)' }} content={<ChartTooltip valueFormatter={(e) => `${e.value}%`} />} />
+              <Tooltip
+                cursor={{ fill: 'rgba(36,42,86,0.05)' }}
+                content={
+                  <ChartTooltip
+                    valueFormatter={(e) =>
+                      `${e.value}%${e.payload.opportunities ? ` · ${e.payload.opportunities.toLocaleString('en-AU')} opportunities` : ''}`
+                    }
+                  />
+                }
+              />
               <Bar dataKey="pct" fill={COLORS.magnitudeBlue} radius={[4, 4, 0, 0]} barSize={40} minPointSize={2} isAnimationActive={false}>
                 <LabelList
                   dataKey="pct"
