@@ -750,7 +750,7 @@ export function seedReports() {
     },
     {
       id: 'w37-2026',
-      version: 1,
+      version: 2,
       label: 'W37 (7–13 Sep 2026)',
       date: '2026-09-07',
       kpis: [
@@ -826,7 +826,36 @@ export function seedReports() {
         'City of Interest is an optional field left blank on 66.4% of this week\'s opportunities (608 of 915) — the city chart above undercounts true demand; see "Opportunities by property" below for the closest available read on actual location interest.',
         'YTD cumulative leads (1 Jan–13 Sep) are down 18.1% YoY (34,556 vs 42,190) on the same calendar window in both years; bookatour, waitlist and Agent Portal remain the largest sources in both years.',
         'This week\'s report uses a new template with fewer traffic-channel categories than prior cycles (Email, Display, Unassigned, AI Assistant and Cross-network appear to be grouped into "Other" this time) — worth confirming with the analytics owner whether this is a permanent change before comparing WoW at the individual-channel level next cycle.',
+        'A separate quick web-report summary from Aggie (GA) supplied for this week doesn\'t reconcile with the detailed report above — sessions 39,493 vs 39,030 here, and leads 491 vs 1,036 here (roughly half, the largest reconciliation gap seen yet, likely a different leads definition/scope) — see "Quick web report" below. That summary\'s channel and lead-origin breakdowns were supplied only as WoW% by category with no underlying volume, so the lead-origin chart below shows percentage change only, not count.',
       ],
+      quickWebReport: {
+        periodLabel: '7–13 Sep 2026',
+        comparedTo: '31 Aug – 6 Sep 2026',
+        totalSessions: 39493,
+        sessionsWow: 22.07,
+        purchases: 62,
+        purchasesWow: 138.46,
+        revenue: 1538444,
+        revenueWow: 258.25,
+        totalLeads: 491,
+        leadsWow: 6.05,
+        channelsWow: [
+          { name: 'Direct', wow: 80.31 },
+          { name: 'Email', wow: 71.36 },
+          { name: 'Organic Search', wow: 24.22 },
+          { name: 'Paid Search', wow: -9.51 },
+          { name: 'Paid Social', wow: -0.77 },
+        ],
+        leadOriginsWow: [
+          { name: 'Sold Out Waitlist', wow: 43.6 },
+          { name: 'Take a Tour', wow: 17.2 },
+          { name: 'Refer a Friend', wow: 25.0 },
+          { name: 'Newsletter', wow: -22.6 },
+          { name: 'Contact Us', wow: -18.2 },
+          { name: 'City Guide', wow: -12.0 },
+          { name: 'Future Waitlist', wow: -12.2 },
+        ],
+      },
     },
   ];
 }

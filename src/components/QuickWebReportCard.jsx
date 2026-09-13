@@ -1,10 +1,17 @@
 import { StatMini } from './StatMini.jsx';
 import { CountBarChart } from './CountBarChart.jsx';
+import { WowBarChart } from './WowBarChart.jsx';
 import { SectionHeader } from './SectionHeader.jsx';
 import { COLORS } from '../lib/colors.js';
 
 export function QuickWebReportCard({ report }) {
   if (!report) return null;
+
+  // Some cycles' quick report only supplies a WoW% per lead-origin category
+  // with no underlying count — a magnitude bar would have to invent a volume
+  // that isn't there, so that shape gets the diverging WoW chart instead.
+  const hasOriginCounts = report.leadOrigins?.length > 0;
+  const hasOriginWow = report.leadOriginsWow?.length > 0;
 
   return (
     <section>
@@ -23,8 +30,18 @@ export function QuickWebReportCard({ report }) {
           <StatMini label="Total leads" value={report.totalLeads.toLocaleString('en-AU')} delta={report.leadsWow} />
         </div>
 
-        <p className="card-subhead">Lead origin</p>
-        <CountBarChart data={report.leadOrigins} color={COLORS.magnitudeTeal} labelWidth={130} />
+        {hasOriginCounts && (
+          <>
+            <p className="card-subhead">Lead origin</p>
+            <CountBarChart data={report.leadOrigins} color={COLORS.magnitudeTeal} labelWidth={130} />
+          </>
+        )}
+        {!hasOriginCounts && hasOriginWow && (
+          <>
+            <p className="card-subhead">Lead origin (WoW %) — no volume/count supplied this cycle</p>
+            <WowBarChart data={report.leadOriginsWow} />
+          </>
+        )}
 
         {report.topProperties?.length > 0 && (
           <>
